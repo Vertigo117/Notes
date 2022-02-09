@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Api", "Notes.Api\Notes.Api.csproj", "{92C23E08-E66E-4D15-BFE0-54CB4381FA70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Data", "Notes.Data\Notes.Data.csproj", "{8E5DB9A7-BAE7-4AD7-8EDA-4D5968D2B4B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Core", "Notes.Core\Notes.Core.csproj", "{D8546F94-512A-4CB1-8447-2606C6E7221A}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92C23E08-E66E-4D15-BFE0-54CB4381FA70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92C23E08-E66E-4D15-BFE0-54CB4381FA70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92C23E08-E66E-4D15-BFE0-54CB4381FA70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92C23E08-E66E-4D15-BFE0-54CB4381FA70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E5DB9A7-BAE7-4AD7-8EDA-4D5968D2B4B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E5DB9A7-BAE7-4AD7-8EDA-4D5968D2B4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E5DB9A7-BAE7-4AD7-8EDA-4D5968D2B4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E5DB9A7-BAE7-4AD7-8EDA-4D5968D2B4B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8546F94-512A-4CB1-8447-2606C6E7221A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8546F94-512A-4CB1-8447-2606C6E7221A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8546F94-512A-4CB1-8447-2606C6E7221A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8546F94-512A-4CB1-8447-2606C6E7221A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

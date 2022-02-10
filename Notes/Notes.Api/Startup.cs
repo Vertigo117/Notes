@@ -48,6 +48,8 @@ namespace Notes.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCustomErrorHandlingMiddleware();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

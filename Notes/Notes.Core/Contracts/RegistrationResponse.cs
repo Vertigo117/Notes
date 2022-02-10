@@ -1,42 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Notes.Core.Contracts
+﻿namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Результат выполнения запроса на регистрацию пользователя в системе
+    /// Результат регистрации пользователя
     /// </summary>
     public class RegistrationResponse
     {
         /// <summary>
-        /// Результат регистрации
+        /// Адрес электронной почты
         /// </summary>
-        public bool IsSuccess { get; }
+        public string Email { get; set; }
 
         /// <summary>
-        /// Сообщение
+        /// Имя пользователя
         /// </summary>
-        public string Message { get; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// Создаёт новый экземпляр класса <seealso cref="RegistrationResponse"/>
+        /// Захешированный пароль
         /// </summary>
-        public RegistrationResponse()
-        {
-            IsSuccess = true;
-        }
-
-        /// <summary>
-        /// Создаёт новый экземпляр класса <seealso cref="RegistrationRequest"/> с сообщением
-        /// </summary>
-        /// <param name="message">Сообщение</param>
-        public RegistrationResponse(string message)
-        {
-            Message = message;
-            IsSuccess = false;
-        }
+        public string PasswordHash { get; set; }
     }
 }

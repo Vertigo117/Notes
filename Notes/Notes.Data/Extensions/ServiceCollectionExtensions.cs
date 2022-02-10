@@ -13,7 +13,7 @@ namespace Notes.Data.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Добавить базу данных
+        /// Добавить контекст данных и репозитории
         /// </summary>
         /// <param name="services">Контейнер сервисов</param>
         /// <param name="configuration">Параметры конфигурации</param>

@@ -1,7 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Data.Contexts;
 using Notes.Data.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Notes.Data.Repositories
 {
@@ -28,14 +32,14 @@ namespace Notes.Data.Repositories
             entities.Remove(entity);
         }
 
-        public TEntity Get(object id)
+        public async Task<TEntity> GetAsync(object id)
         {
-            return entities.Find(id);
+            return await entities.FindAsync(id);
         }
 
-        public IEnumerable<TEntity> Get()
+        public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> condition)
         {
-            return entities;
+            return await entities.Where(condition).ToListAsync();
         }
 
         public void Update(TEntity entity)

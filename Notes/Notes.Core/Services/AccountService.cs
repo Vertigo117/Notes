@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Notes.Core.Contracts;
 using Notes.Core.Interfaces;
 using Notes.Data.Entities;
 using Notes.Data.Interfaces;
-using System.Collections.Generic;
-using System.Security.Claims;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Notes.Core.Services
@@ -16,68 +12,52 @@ namespace Notes.Core.Services
     {
         private readonly IUnitOfWork repository;
         private readonly IEncryptionService encryptionService;
+        private readonly IJwtService jwtService;
         private readonly IMapper mapper;
 
-        public AccountService(IUnitOfWork repository, IEncryptionService encryptionService, IMapper mapper)
+        public AccountService(
+            IUnitOfWork repository,
+            IEncryptionService encryptionService,
+            IJwtService jwtService,
+            IMapper mapper)
         {
             this.repository = repository;
             this.encryptionService = encryptionService;
+            this.jwtService = jwtService;
             this.mapper = mapper;
         }
 
-        public async Task<LoginResponse> LoginAsync(LoginRequest request, HttpContext httpContext)
+        public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            User user = repository.Users.Get(request.Email);
+            User user = await repository.Users.GetAsync(request.Email);
 
-            if (user == null)
+            if (!encryptionService.ValidatePassword(request.Password, user?.PasswordHash))
             {
-                return new LoginResponse("Пользователя с указанным адресом электронной почты не существует");
+                return null;
             }
 
-            if (!encryptionService.ValidatePassword(request.Password, user.Password))
-            {
-                return new LoginResponse("Пароль введён неверно");
-            }
-
-            await SignInAsync(httpContext, user);
-
-            return new LoginResponse();
+            return new LoginResponse { Token = jwtService.Generate(request.Email) };
         }
 
-        private static async Task SignInAsync(HttpContext httpContext, User user)
+        public async Task<RegistrationResponse> RegisterAsync(RegistrationRequest request)
         {
-            var claims = new List<Claim> { new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email) };
-
-            var claimsIdentity = new ClaimsIdentity(
-                claims, "ApplicationCookie",
-                ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
-
-            await httpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
-        }
-
-        public async Task<RegistrationResponse> Register(RegistrationRequest request)
-        {
-            if (repository.Users.Get(request.Email) != null)
+            if (await IsExistingUser(request.Email))
             {
-                return new RegistrationResponse("Пользователь с указанным адресом электронной почты уже существует");
+                return null;
             }
 
             var user = mapper.Map<User>(request);
-
-            user.Password = encryptionService.HashPassword(user.Password);
+            user.PasswordHash = encryptionService.HashPassword(request.Password);
 
             repository.Users.Add(user);
             await repository.SaveChangesAsync();
 
-            return new RegistrationResponse();
+            return mapper.Map<RegistrationResponse>(user);
         }
 
-        public async Task LogoutAsync(HttpContext httpContext)
+        private async Task<bool> IsExistingUser(string email)
         {
-            await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return (await repository.Users.GetAsync(user => user.Email == email)).Any();
         }
     }
 }

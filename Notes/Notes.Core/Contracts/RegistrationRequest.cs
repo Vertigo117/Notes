@@ -14,5 +14,10 @@
         /// Пароль
         /// </summary>
         public string Password { get; set; }
+
+        /// <summary>
+        /// Имя пользователя
+        /// </summary>
+        public string Name { get; set; }
     }
 }

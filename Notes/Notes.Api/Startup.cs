@@ -22,16 +22,13 @@ namespace Notes.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Notes.Api", Version = "v1" });
-            });
+            services.AddControllers()
+                .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
-
+            services.AddSwagger();
             services.AddCoreServices();
             services.AddDataServices(Configuration);
-            services.AddCustomAuthentication();
+            services.AddCustomAuthentication(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +46,7 @@ namespace Notes.Api
             app.UseRouting();
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

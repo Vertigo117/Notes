@@ -9,6 +9,7 @@ namespace Notes.Core.MappingProfiles
         public UserProfile()
         {
             CreateMap<RegistrationRequest, User>();
+            CreateMap<User, RegistrationResponse>();
         }
     }
 }

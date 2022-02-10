@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Notes.Data.Interfaces
 {
@@ -12,14 +15,19 @@ namespace Notes.Data.Interfaces
         /// Получить экземпляр сущности с указанным уникальным идентификатором
         /// </summary>
         /// <param name="id">Уникальный идентификатор</param>
-        /// <returns>Экземпляр сущности с указанным уникальным идентификатором</returns>
-        TEntity Get(object id);
+        /// <returns>Задача, которая содержит результат выполнения асинхронной операции.
+        /// Результат операции представляет собой экземпляр сущности типа <typeparamref name="TEntity"/>
+        /// с указанным уникальным идентификатором либо <see cref="null"/>, если экземпляра с таким идентификатором
+        /// не существует</returns>
+        Task<TEntity> GetAsync(object id);
 
         /// <summary>
-        /// Получить все экземпляры сущности
+        /// Получить все экземпляры сущности, соответствующие условию
         /// </summary>
-        /// <returns>Коллекция экземпляров сущности указанного типа</returns>
-        IEnumerable<TEntity> Get();
+        /// <param name="condition">Условие для выборки</param>
+        /// <returns>Задача, которая содержит результат выполнения асинхронной операции.
+        /// Результат представляет собой коллекцию элементов типа <typeparamref name="TEntity"/></returns>
+        Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> condition);
 
         /// <summary>
         /// Обновить экземпляр сущности

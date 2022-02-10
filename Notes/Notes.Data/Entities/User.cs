@@ -18,9 +18,9 @@ namespace Notes.Data.Entities
         public string Name { get; set; }
 
         /// <summary>
-        /// Пароль
+        /// Захешированный пароль
         /// </summary>
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
 
         /// <summary>
         /// Заметки

@@ -20,6 +20,8 @@ namespace Notes.Core.Extensions
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IEncryptionService, EncryptionService>();
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<INotesService, NotesService>();
         }
     }
 }

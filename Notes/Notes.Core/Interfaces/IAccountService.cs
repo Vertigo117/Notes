@@ -10,25 +10,17 @@ namespace Notes.Core.Interfaces
     public interface IAccountService
     {
         /// <summary>
-        /// Выполнить аутентификацию пользователя
+        /// Выполнить аутентификацию
         /// </summary>
         /// <param name="request">Запрос на аутентификацию</param>
-        /// <param name="httpContext">Контекст запроса</param>
-        /// <returns>задача, которая содержит результат аутентификации</returns>
-        Task<LoginResponse> LoginAsync(LoginRequest request, HttpContext httpContext);
+        /// <returns>Ответ на запрос аутентификации, содержащий JWT</returns>
+        Task<LoginResponse> LoginAsync(LoginRequest request);
 
         /// <summary>
-        /// Зарегистрировать пользователя в системе
+        /// Зарегистрировать нового пользователя в системе
         /// </summary>
         /// <param name="request">Запрос на регистрацию</param>
-        /// <returns>Задача, которая содержит результат регистрации</returns>
-        Task<RegistrationResponse> Register(RegistrationRequest request);
-
-        /// <summary>
-        /// Выйти из системы
-        /// </summary>
-        /// <param name="httpContext">Контекст запроса</param>
-        /// <returns>Результат выполнения асинхронной операции</returns>
-        Task LogoutAsync(HttpContext httpContext);
+        /// <returns>Ответ на запрос регистрации, содержащий данные созданного пользователя</returns>
+        Task<RegistrationResponse> RegisterAsync(RegistrationRequest request);
     }
 }

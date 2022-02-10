@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Notes.Core.Services
 {
+    /// <summary>
+    /// Сервис для авторизации и регистрации пользователей
+    /// </summary>
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork repository;

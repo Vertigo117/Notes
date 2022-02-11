@@ -29,6 +29,8 @@ namespace Notes.Api
             services.AddCoreServices();
             services.AddDataServices(Configuration);
             services.AddCustomAuthentication(Configuration);
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +51,8 @@ namespace Notes.Api
             app.UseAuthorization();
 
             app.UseCustomErrorHandlingMiddleware();
+
+            app.UseCors(options => options.AllowAnyOrigin());
 
             app.UseEndpoints(endpoints =>
             {

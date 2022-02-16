@@ -34,12 +34,16 @@ namespace Notes.Core.Services
         {
             User user = await repository.Users.GetAsync(request.Email);
 
-            if (!encryptionService.ValidatePassword(request.Password, user?.PasswordHash))
+            if (user == null || !encryptionService.ValidatePassword(request.Password, user.PasswordHash))
             {
                 return null;
             }
 
-            return new LoginResponse { Token = jwtService.Generate(request.Email) };
+            return new LoginResponse 
+            { 
+                UserName = user.Name, 
+                Token = jwtService.Generate(request.Email) 
+            };
         }
 
         public async Task<RegistrationResponse> RegisterAsync(RegistrationRequest request)

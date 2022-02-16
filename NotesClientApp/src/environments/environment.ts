@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  authApi: 'https://localhost:44346/api/Account',
+  notesApi: 'https://localhost:44346/api/Notes',
+  allowedDomains: ['localhost:44346'],
+  disallowedRoutes: ['https://localhost:44346/api/Account']
 };
 
 /*

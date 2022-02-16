@@ -14,8 +14,6 @@ namespace Notes.Core.MappingProfiles
             CreateMap<CreateNoteRequest, Note>();
             CreateMap<Note, CreateNoteResponse>();
             CreateMap<UpdateNoteRequest, Note>();
-            CreateMap<IEnumerable<Note>, GetAllNotesResponse>()
-                .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.ToList()));
         }
     }
 }

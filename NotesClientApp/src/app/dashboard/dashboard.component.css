@@ -1,0 +1,36 @@
+.more-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
+.dashboard-card-content {
+    text-align: left;
+}
+
+.notes {
+    padding-bottom: 2%;
+}
+
+.grid-container {
+    margin: 20px;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 20px);
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.header-div {
+    display: flex;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}

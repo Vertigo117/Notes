@@ -16,7 +16,8 @@
             <textarea matInput placeholder="Введите текст..." [(ngModel)]="note.Text"></textarea>
         </mat-form-field>
     </div>
-    <div>
+    <div class="buttons">
         <button mat-raised-button color="basic" (click)="updateNoteHandler()">Сохранить</button>
+        <button mat-raised-button color="accent" (click)="onCancel()">Отмена</button>
     </div>
 </div>

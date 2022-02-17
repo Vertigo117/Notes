@@ -31,4 +31,7 @@
     <div class="button">
         <button mat-raised-button (click)="onRegister(email.value, password.value)" [disabled]="!(emailControl.valid && passwordControl.valid) || isInLoadingState">Зарегистрироваться</button>
     </div>
+    <div class="button">
+        <button mat-raised-button color="accent" (click)="onCancel()">Отмена</button>
+    </div>
 </div>

@@ -26,4 +26,8 @@ export class AddNoteComponent implements OnInit {
 
     this.notesService.create(note).subscribe(() => this.router.navigateByUrl('notes'));
   }
+
+  onCancel(): void {
+    this.router.navigateByUrl('notes');
+  }
 }

@@ -30,10 +30,7 @@ export class NavigationComponent implements OnInit {
     private router: Router) {}
 
   openDialog(): void {
-   const dialogRef = this.dialog.open(LoginDialogComponent, {
-     height: "50%",
-     width: "20%"
-   });
+   const dialogRef = this.dialog.open(LoginDialogComponent);
    dialogRef.afterClosed().subscribe(() => {
     if (this.auth.isAuthenticated()) {
       this.router.navigate(['notes']);

@@ -22,3 +22,7 @@ button {
     display: flex;
     margin: auto;
 }
+
+.dialog-container {
+    margin: 1rem;
+}

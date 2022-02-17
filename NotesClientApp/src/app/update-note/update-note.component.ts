@@ -21,4 +21,8 @@ export class UpdateNoteComponent implements OnInit {
     this.notesService.update(this.note.Id, this.note).subscribe(() => this.router.navigateByUrl('notes'));
   }
 
+  onCancel(): void {
+    this.router.navigateByUrl('notes');
+  }
+
 }

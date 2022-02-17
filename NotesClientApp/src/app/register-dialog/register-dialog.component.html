@@ -1,34 +1,39 @@
-<div class="title" mat-dialog-title>
-    <h1>Зарегистрироваться</h1>
-    <mat-spinner *ngIf="isInLoadingState" diameter="23"></mat-spinner>
-</div>
-<div mat-dialog-content>
-    <div>
-        <mat-form-field appearance="fill">
-            <mat-label>Введите адрес электронной почты</mat-label>
-            <input matInput placeholder="pat@example.com" [formControl]="emailControl" required #email>
-            <mat-error *ngIf="emailControl.invalid">{{getErrorMessage()}}</mat-error>
-        </mat-form-field>
+<div class="dialog-container">
+    <div class="title" mat-dialog-title>
+        <h1>Зарегистрироваться</h1>
+        <mat-spinner *ngIf="isInLoadingState" diameter="23"></mat-spinner>
     </div>
-    <div>
-        <mat-form-field appearance="fill">
-            <mat-label>Введите пароль</mat-label>
-            <input matInput [type]="hide ? 'password' : 'text'" [formControl]="passwordControl" required #password>
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Показать пароль'" [attr.aria-pressed]="hide">
-                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <mat-error *ngIf="passwordControl.invalid">{{getErrorMessage()}}</mat-error>
-        </mat-form-field>
+    <div mat-dialog-content>
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Введите адрес электронной почты</mat-label>
+                <input matInput placeholder="pat@example.com" [formControl]="emailControl" required #email>
+                <mat-error *ngIf="emailControl.invalid">{{getErrorMessage()}}</mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Введите пароль</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" [formControl]="passwordControl" required #password>
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Показать пароль'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="passwordControl.invalid">{{getErrorMessage()}}</mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="full-width" appearance="fill">
+                <mat-label>Имя пользователя</mat-label>
+                <input matInput placeholder="Имя" [(ngModel)]="userName">
+            </mat-form-field>
+        </div>
     </div>
-    <div>
-        <mat-form-field class="full-width" appearance="fill">
-            <mat-label>Имя пользователя</mat-label>
-            <input matInput placeholder="Имя" [(ngModel)]="userName">
-        </mat-form-field>
-    </div>
-</div>
-<div mat-dialog-actions>
-    <div class="button">
-        <button mat-raised-button (click)="onRegister(email.value, password.value)" [disabled]="!(emailControl.valid && passwordControl.valid) || isInLoadingState">Зарегистрироваться</button>
+    <div mat-dialog-actions>
+        <div class="button">
+            <button mat-raised-button (click)="onRegister(email.value, password.value)" [disabled]="!(emailControl.valid && passwordControl.valid) || isInLoadingState">Зарегистрироваться</button>
+        </div>
+        <div class="button">
+            <button mat-raised-button color="accent" (click)="onCancel()">Отмена</button>
+        </div>
     </div>
 </div>

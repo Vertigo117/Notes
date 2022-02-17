@@ -14,8 +14,6 @@ import { Router } from '@angular/router';
 })
 export class NavigationComponent implements OnInit {
 
-  isAuthenticated: boolean = false;
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -23,23 +21,18 @@ export class NavigationComponent implements OnInit {
     );
 
     ngOnInit(): void {
-      this.isAuthenticated = this.auth.isAuthenticated();
     }
 
   constructor(
     private breakpointObserver: BreakpointObserver, 
     public dialog: MatDialog, 
-    private auth: AuthService,
+    public auth: AuthService,
     private router: Router) {}
 
   openDialog(): void {
-   const dialogRef = this.dialog.open(LoginDialogComponent, {
-     height: "50%",
-     width: "20%"
-   });
+   const dialogRef = this.dialog.open(LoginDialogComponent);
    dialogRef.afterClosed().subscribe(() => {
-    this.isAuthenticated = this.auth.isAuthenticated();
-    if (this.isAuthenticated) {
+    if (this.auth.isAuthenticated()) {
       this.router.navigate(['notes']);
     }
    });
@@ -47,7 +40,6 @@ export class NavigationComponent implements OnInit {
 
   logout(): void {
     this.auth.logout();
-    this.isAuthenticated = this.auth.isAuthenticated();
     this.router.navigate(['']);
   }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Notes.Core.Contracts;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Notes.Core.Interfaces
@@ -29,7 +30,7 @@ namespace Notes.Core.Interfaces
         /// </summary>
         /// <param name="httpContext">Контекст запроса</param>
         /// <returns>Результат выполнения запроса, который содержит коллекцию заметок пользователя</returns>
-        Task<GetAllNotesResponse> GetAllNotesAsync(HttpContext httpContext);
+        Task<IEnumerable<GetNoteResponse>> GetAllNotesAsync(HttpContext httpContext);
 
         /// <summary>
         /// Удалить заметку с указанным уникальным идентификатором

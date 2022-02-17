@@ -1,0 +1,24 @@
+mat-form-field {
+    width: 100%;
+}
+
+mat-spinner {
+    margin-left: 10%;
+}
+
+.mat-dialog-actions {
+    display: block;
+}
+
+.button {
+    padding-top: 5%;
+}
+
+button {
+    width: 100%;
+}
+
+.title {
+    display: flex;
+    margin: auto;
+}

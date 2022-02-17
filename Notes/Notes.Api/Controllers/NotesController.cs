@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Notes.Core.Contracts;
 using Notes.Core.Interfaces;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -41,10 +42,10 @@ namespace Notes.Api.Controllers
         [HttpGet]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        [ProducesResponseType((typeof(GetAllNotesResponse)), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((typeof(IEnumerable<GetNoteResponse>)), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetAll()
         {
-            GetAllNotesResponse response = await notesService.GetAllNotesAsync(HttpContext);
+            IEnumerable<GetNoteResponse> response = await notesService.GetAllNotesAsync(HttpContext);
             return Ok(response);
         }
 

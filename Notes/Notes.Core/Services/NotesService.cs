@@ -44,11 +44,11 @@ namespace Notes.Core.Services
             return httpContext.User.FindFirst(ClaimTypes.Email).Value;
         }
 
-        public async Task<GetAllNotesResponse> GetAllNotesAsync(HttpContext httpContext)
+        public async Task<IEnumerable<GetNoteResponse>> GetAllNotesAsync(HttpContext httpContext)
         {
             string email = GetUserEmail(httpContext);
             IEnumerable<Note> userNotes = await repository.Notes.GetAsync(note => note.User.Email == email);
-            return mapper.Map<GetAllNotesResponse>(userNotes);
+            return mapper.Map<IEnumerable<GetNoteResponse>>(userNotes);
         }
 
         public async Task<GetNoteResponse> GetNoteAsync(int id)

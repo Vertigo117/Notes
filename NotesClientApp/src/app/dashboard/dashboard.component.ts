@@ -16,10 +16,25 @@ export class DashboardComponent implements OnInit {
     private router: Router) {}
 
   ngOnInit(): void {
-      this.notesService.getAll().subscribe(() => this.isInLoadingState = false);
+      this.refreshNotes();
+  }
+
+  refreshNotes(): void {
+    this.notesService.getAll().subscribe(() => this.isInLoadingState = false);
   }
 
   addNoteHandler(): void {
     this.router.navigateByUrl('add-note');
+  }
+
+  deleteNoteHandler(id: number): void {
+    this.isInLoadingState = true;
+    this.notesService.delete(id).subscribe(() => {
+      this.refreshNotes();
+    })
+  }
+
+  updateNoteHandler(note: Note): void {
+    this.router.navigateByUrl('update-note', { state: note });
   }
 }

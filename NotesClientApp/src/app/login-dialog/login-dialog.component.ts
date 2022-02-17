@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { RegisterDialogComponent } from '../register-dialog/register-dialog.component';
 
 export interface IAuthData {
 }
@@ -20,7 +21,8 @@ export class LoginDialogComponent implements OnInit {
   isInLoadingState = false;
 
   constructor(
-    public dialogRef: MatDialogRef<NavigationComponent>, 
+    public dialogRef: MatDialogRef<NavigationComponent>,
+    public dialog: MatDialog,
     public auth: AuthService) {}
 
   ngOnInit(): void {
@@ -45,4 +47,8 @@ export class LoginDialogComponent implements OnInit {
     });
   }
 
+  onRegister(): void {
+    this.dialogRef.close();
+    this.dialog.open(RegisterDialogComponent);
+  }
 }

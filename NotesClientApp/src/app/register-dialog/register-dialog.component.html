@@ -1,5 +1,5 @@
 <div class="title" mat-dialog-title>
-    <h1>Войти</h1>
+    <h1>Зарегистрироваться</h1>
     <mat-spinner *ngIf="isInLoadingState" diameter="23"></mat-spinner>
 </div>
 <div mat-dialog-content>
@@ -20,12 +20,15 @@
             <mat-error *ngIf="passwordControl.invalid">{{getErrorMessage()}}</mat-error>
         </mat-form-field>
     </div>
+    <div>
+        <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Имя пользователя</mat-label>
+            <input matInput placeholder="Имя" [(ngModel)]="userName">
+        </mat-form-field>
+    </div>
 </div>
 <div mat-dialog-actions>
     <div class="button">
-        <button mat-raised-button (click)="onLogin(email.value, password.value)" [disabled]="!(emailControl.valid && passwordControl.valid) || isInLoadingState">Войти</button>
-    </div>
-    <div class="button">
-        <button mat-raised-button color="primary" (click)="onRegister()">Зарегистрироваться</button>
+        <button mat-raised-button (click)="onRegister(email.value, password.value)" [disabled]="!(emailControl.valid && passwordControl.valid) || isInLoadingState">Зарегистрироваться</button>
     </div>
 </div>

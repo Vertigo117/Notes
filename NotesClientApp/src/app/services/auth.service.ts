@@ -5,6 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { AUTH_API_URL } from '../app-injection-tokens';
 import { LoginResponse } from '../Models/LoginResponse';
+import { User } from '../Models/User';
 
 export const ACCESS_TOKEN_KEY = 'access_token';
 
@@ -27,6 +28,12 @@ export class AuthService {
       next: response => localStorage.setItem(ACCESS_TOKEN_KEY, response.Token),
       error: err => this.handleError(err)
     }));
+  }
+
+  register(user: User): Observable<User> {
+    return this.httpClient.post<User>(`${this.apiUrl}/Register`, user).pipe(tap({
+      error: err => this.handleError(err)
+    }))
   }
 
   isAuthenticated(): boolean {

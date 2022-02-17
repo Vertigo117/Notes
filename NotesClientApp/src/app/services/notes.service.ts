@@ -27,6 +27,14 @@ export class NotesService {
     return this.httpClient.post<Note>(`${this.apiUrl}/Create`, note);
   }
 
+  update(id: number, note: Note): Observable<unknown> {
+    return this.httpClient.put<Note>(`${this.apiUrl}/Update/${id}`, note);
+  }
+
+  delete(id: number): Observable<unknown> {
+    return this.httpClient.delete(`${this.apiUrl}/Delete/${id}`);
+  }
+
   handleError(error: any): void {
     if (error instanceof HttpErrorResponse)
     {

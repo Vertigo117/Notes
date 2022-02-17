@@ -29,6 +29,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AddNoteComponent } from './add-note/add-note.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UpdateNoteComponent } from './update-note/update-note.component';
+import { RegisterDialogComponent } from './register-dialog/register-dialog.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -41,7 +43,9 @@ export function tokenGetter() {
     DashboardComponent,
     HomeComponent,
     LoginDialogComponent,
-    AddNoteComponent
+    AddNoteComponent,
+    UpdateNoteComponent,
+    RegisterDialogComponent
 
   ],
   imports: [

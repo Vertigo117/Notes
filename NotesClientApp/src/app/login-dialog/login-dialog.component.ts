@@ -51,4 +51,8 @@ export class LoginDialogComponent implements OnInit {
     this.dialogRef.close();
     this.dialog.open(RegisterDialogComponent);
   }
+
+  onCancel(): void {
+    this.dialogRef.close();
+  }
 }

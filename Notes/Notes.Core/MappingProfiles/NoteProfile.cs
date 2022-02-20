@@ -10,10 +10,8 @@ namespace Notes.Core.MappingProfiles
     {
         public NoteProfile()
         {
-            CreateMap<Note, GetNoteResponse>();
-            CreateMap<CreateNoteRequest, Note>();
-            CreateMap<Note, CreateNoteResponse>();
-            CreateMap<UpdateNoteRequest, Note>();
+            CreateMap<Note, NoteDto>();
+            CreateMap<NoteUpsertDto, Note>();
         }
     }
 }

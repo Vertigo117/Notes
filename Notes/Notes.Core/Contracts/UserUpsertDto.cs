@@ -1,9 +1,9 @@
 ﻿namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Результат регистрации пользователя
+    /// Запрос на регистрацию пользователя
     /// </summary>
-    public class RegistrationResponse
+    public class UserUpsertDto
     {
         /// <summary>
         /// Адрес электронной почты
@@ -11,13 +11,13 @@
         public string Email { get; set; }
 
         /// <summary>
+        /// Пароль
+        /// </summary>
+        public string Password { get; set; }
+
+        /// <summary>
         /// Имя пользователя
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Захешированный пароль
-        /// </summary>
-        public string PasswordHash { get; set; }
     }
 }

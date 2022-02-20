@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Notes.Core.Contracts
+﻿namespace Notes.Core.Contracts
 {
     /// <summary>
     /// Запрос на авторизацию пользователя в системе
     /// </summary>
-    public class LoginRequest
+    public class UserLoginDto
     {
         /// <summary>
         /// Адрес электронной почты

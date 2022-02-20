@@ -1,12 +1,18 @@
-﻿namespace Notes.Core.Contracts
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Ответ на запрос создания новой заметки
+    /// Результат выполнения запроса на получение записи
     /// </summary>
-    public class CreateNoteResponse
+    public class NoteDto
     {
         /// <summary>
-        /// Уникальный идентификатор заметки
+        /// Уникальный идентификатор записи
         /// </summary>
         public int Id { get; set; }
 

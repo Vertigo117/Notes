@@ -22,30 +22,30 @@ namespace Notes.Api.Controllers
         [HttpGet("{id}")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        [ProducesResponseType((typeof(GetNoteResponse)), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((typeof(NoteDto)), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
-            GetNoteResponse response = await notesService.GetNoteAsync(id);
+            NoteDto response = await notesService.GetNoteAsync(id);
             return Ok(response);
         }
 
         [HttpPost]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        [ProducesResponseType((typeof(CreateNoteResponse)), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> Create([FromBody] CreateNoteRequest request)
+        [ProducesResponseType((typeof(NoteUpsertDto)), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> Create([FromBody] NoteUpsertDto request)
         {
-            CreateNoteResponse response = await notesService.CreateNoteAsync(request, HttpContext);
+            NoteDto response = await notesService.CreateNoteAsync(request, HttpContext);
             return Ok(response);
         }
         
         [HttpGet]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        [ProducesResponseType((typeof(IEnumerable<GetNoteResponse>)), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((typeof(IEnumerable<NoteDto>)), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetAll()
         {
-            IEnumerable<GetNoteResponse> response = await notesService.GetAllNotesAsync(HttpContext);
+            IEnumerable<NoteDto> response = await notesService.GetAllNotesAsync(HttpContext);
             return Ok(response);
         }
 
@@ -56,7 +56,7 @@ namespace Notes.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            GetNoteResponse note = await notesService.GetNoteAsync(id);
+            NoteDto note = await notesService.GetNoteAsync(id);
 
             if (note == null)
             {
@@ -72,9 +72,9 @@ namespace Notes.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateNoteRequest request)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] NoteUpsertDto request)
         {
-            GetNoteResponse note = await notesService.GetNoteAsync(id);
+            NoteDto note = await notesService.GetNoteAsync(id);
 
             if (note == null)
             {

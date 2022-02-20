@@ -30,7 +30,7 @@ namespace Notes.Core.Services
             this.mapper = mapper;
         }
 
-        public async Task<LoginResponse> LoginAsync(LoginRequest request)
+        public async Task<TokenDto> LoginAsync(UserLoginDto request)
         {
             User user = await repository.Users.GetAsync(request.Email);
 
@@ -39,14 +39,13 @@ namespace Notes.Core.Services
                 return null;
             }
 
-            return new LoginResponse 
-            { 
-                UserName = user.Name, 
+            return new TokenDto 
+            {
                 Token = jwtService.Generate(request.Email) 
             };
         }
 
-        public async Task<RegistrationResponse> RegisterAsync(RegistrationRequest request)
+        public async Task<UserDto> RegisterAsync(UserUpsertDto request)
         {
             if (await IsExistingUser(request.Email))
             {
@@ -59,7 +58,7 @@ namespace Notes.Core.Services
             repository.Users.Add(user);
             await repository.SaveChangesAsync();
 
-            return mapper.Map<RegistrationResponse>(user);
+            return mapper.Map<UserDto>(user);
         }
 
         private async Task<bool> IsExistingUser(string email)

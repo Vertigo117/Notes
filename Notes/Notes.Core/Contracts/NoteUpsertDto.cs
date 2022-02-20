@@ -1,17 +1,17 @@
 ﻿namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Запрос на обновление данных заметки
+    /// Запрос на создание записи
     /// </summary>
-    public class UpdateNoteRequest
+    public class NoteUpsertDto
     {
         /// <summary>
-        /// Название заметки
+        /// Название
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Текст заметки
+        /// Текст
         /// </summary>
         public string Text { get; set; }
     }

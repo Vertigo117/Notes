@@ -25,11 +25,11 @@ namespace Notes.Api.Controllers
         /// <returns>Результат аутентификации, содержащий JWT</returns>
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(LoginResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(TokenDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] UserLoginDto request)
         {
-            LoginResponse response = await accountService.LoginAsync(request);
+            TokenDto response = await accountService.LoginAsync(request);
             
             if (response == null)
             {
@@ -48,11 +48,11 @@ namespace Notes.Api.Controllers
         /// <returns>Http-статус код</returns>
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType((typeof(RegistrationResponse)), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((typeof(UserDto)), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Register([FromBody] RegistrationRequest request)
+        public async Task<IActionResult> Register([FromBody] UserUpsertDto request)
         {
-            RegistrationResponse response = await accountService.RegisterAsync(request);
+            UserDto response = await accountService.RegisterAsync(request);
 
             if (response == null)
             {

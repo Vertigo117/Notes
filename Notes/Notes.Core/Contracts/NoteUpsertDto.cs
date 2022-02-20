@@ -1,7 +1,7 @@
 ﻿namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Запрос на создание записи
+    /// Данные для создания и обновления заметки
     /// </summary>
     public class NoteUpsertDto
     {

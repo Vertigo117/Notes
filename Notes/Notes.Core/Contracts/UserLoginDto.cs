@@ -1,7 +1,7 @@
 ﻿namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Запрос на авторизацию пользователя в системе
+    /// Данные пользователя для авторизации в системе
     /// </summary>
     public class UserLoginDto
     {

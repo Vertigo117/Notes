@@ -1,4 +1,6 @@
-﻿namespace Notes.Data.Entities
+﻿using System;
+
+namespace Notes.Data.Entities
 {
     /// <summary>
     /// Заметка
@@ -19,6 +21,11 @@
         /// Текст
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Дата создания
+        /// </summary>
+        public DateTime CreationDate { get; set; }
 
         /// <summary>
         /// Пользователь

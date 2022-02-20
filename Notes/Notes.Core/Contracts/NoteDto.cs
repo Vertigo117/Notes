@@ -7,23 +7,28 @@ using System.Threading.Tasks;
 namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Результат выполнения запроса на получение записи
+    /// Данные заметки
     /// </summary>
     public class NoteDto
     {
         /// <summary>
-        /// Уникальный идентификатор записи
+        /// Уникальный идентификатор
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Название заметки
+        /// Название
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Текст заметки
+        /// Текст
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Дата создания
+        /// </summary>
+        public DateTime CreationDate { get; set; }
     }
 }

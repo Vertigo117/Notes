@@ -1,12 +1,12 @@
 ﻿namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Результат регистрации пользователя
+    /// Данные пользователя
     /// </summary>
     public class UserDto
     {
         /// <summary>
-        /// Уникальный идентификатор пользователя
+        /// Уникальный идентификатор
         /// </summary>
         public int Id { get; set; }
 
@@ -16,7 +16,7 @@
         public string Email { get; set; }
 
         /// <summary>
-        /// Имя пользователя
+        /// Имя
         /// </summary>
         public string Name { get; set; }
 

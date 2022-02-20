@@ -1,7 +1,7 @@
 ﻿namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Запрос на регистрацию пользователя
+    /// Данные для создания и обновления пользователя
     /// </summary>
     public class UserUpsertDto
     {
@@ -16,7 +16,7 @@
         public string Password { get; set; }
 
         /// <summary>
-        /// Имя пользователя
+        /// Имя
         /// </summary>
         public string Name { get; set; }
     }

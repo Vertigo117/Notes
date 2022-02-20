@@ -30,6 +30,8 @@ namespace Notes.Core.Services
         public async Task<NoteDto> CreateNoteAsync(NoteUpsertDto request, HttpContext httpContext)
         {
             var note = mapper.Map<Note>(request);
+            note.CreationDate = DateTime.Now;
+
             string email = GetUserEmail(httpContext);
             note.User = await repository.Users.GetAsync(email);
 

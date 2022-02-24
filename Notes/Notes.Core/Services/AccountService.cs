@@ -41,6 +41,7 @@ namespace Notes.Core.Services
 
             return new TokenDto 
             {
+                UserName = user.Name,
                 Token = jwtService.Generate(request.Email) 
             };
         }

@@ -1,0 +1,55 @@
+<div class="container">
+    <mat-toolbar>
+        <h1>Заметки</h1>
+    </mat-toolbar>
+    <div class="notes-container mat-elevation-z2">
+        <div class="notes">
+            <div class="notes-control">
+                <button mat-flat-button color="primary" (click)="onAddClick()">
+                    <mat-icon>add</mat-icon>
+                    <span>Добавить заметку</span>
+                </button>
+            </div>
+            <div class="notes-list">
+                <mat-selection-list [multiple]="false">
+                    <mat-list-option *ngFor="let note of notes" [value]="note" (click)="onNoteClick(note)">
+                        <div class="option-container">
+                            <div>
+                                <div matLine>{{note.Name}}</div>
+                                <div matLine style="font-size: small;">{{note.CreationDate | date}}</div>
+                            </div>
+                            <div>
+                                <button mat-icon-button (click)="onDeleteClick(note.Id)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+        </div>
+        <div class="notes-edit">
+            <div class="note-edit-controls">
+                <button mat-flat-button (click)="onSaveClick()" color="accent">
+                    <mat-icon>save</mat-icon>
+                    <span>Сохранить</span>
+                </button>
+            </div>
+            <div class="note-edit-content">
+                <form [formGroup]="noteForm">
+                    <div class="note-edit-header">
+                        <mat-form-field>
+                            <mat-label>Название заметки</mat-label>
+                            <textarea matInput type="text" formControlName="Name"></textarea>
+                            <mat-error *ngIf="noteForm.controls['Name'].invalid">Заполните заголовок</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="NgxEditor__Wrapper">
+                        <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                        <ngx-editor [editor]="editor" formControlName="Text" [placeholder]="'Type here...'"></ngx-editor>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

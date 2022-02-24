@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Notes.Data.Entities
+namespace Notes.Core.Contracts
 {
     /// <summary>
-    /// Заметка
+    /// Данные заметки
     /// </summary>
-    public class Note
+    public class NoteDto
     {
         /// <summary>
         /// Уникальный идентификатор
@@ -26,10 +30,5 @@ namespace Notes.Data.Entities
         /// Дата создания
         /// </summary>
         public DateTime CreationDate { get; set; }
-
-        /// <summary>
-        /// Пользователь
-        /// </summary>
-        public User User { get; set; }
     }
 }

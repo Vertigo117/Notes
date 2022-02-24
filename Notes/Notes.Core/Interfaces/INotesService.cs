@@ -15,7 +15,7 @@ namespace Notes.Core.Interfaces
         /// </summary>
         /// <param name="id">Уникальный идентификатор заметки</param>
         /// <returns>Заметка с указанным уникальным идентификатором</returns>
-        Task<GetNoteResponse> GetNoteAsync(int id);
+        Task<NoteDto> GetNoteAsync(int id);
 
         /// <summary>
         /// Обработать запрос на создание заметки пользователя
@@ -23,14 +23,14 @@ namespace Notes.Core.Interfaces
         /// <param name="request">Запрос на создание заметки</param>
         /// <param name="httpContext">Контекст запроса</param>
         /// <returns>Ответ на запрос создания заметки, который содержит данные созданной заметки</returns>
-        Task<CreateNoteResponse> CreateNoteAsync(CreateNoteRequest request, HttpContext httpContext);
+        Task<NoteDto> CreateNoteAsync(NoteUpsertDto request, HttpContext httpContext);
 
         /// <summary>
         /// Обработать запрос на получение заметок пользователя
         /// </summary>
         /// <param name="httpContext">Контекст запроса</param>
         /// <returns>Результат выполнения запроса, который содержит коллекцию заметок пользователя</returns>
-        Task<IEnumerable<GetNoteResponse>> GetAllNotesAsync(HttpContext httpContext);
+        Task<IEnumerable<NoteDto>> GetAllNotesAsync(HttpContext httpContext);
 
         /// <summary>
         /// Удалить заметку с указанным уникальным идентификатором
@@ -45,6 +45,6 @@ namespace Notes.Core.Interfaces
         /// <param name="id">Уникальный идентификатор заметки</param>
         /// <param name="request">Данные для обновление</param>
         /// <returns>Результат выполнения асинхронной операции</returns>
-        Task UpdateNoteAsync(int id, UpdateNoteRequest request);
+        Task UpdateNoteAsync(int id, NoteUpsertDto request);
     }
 }

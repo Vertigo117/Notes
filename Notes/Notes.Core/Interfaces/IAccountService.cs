@@ -14,13 +14,13 @@ namespace Notes.Core.Interfaces
         /// </summary>
         /// <param name="request">Запрос на аутентификацию</param>
         /// <returns>Ответ на запрос аутентификации, содержащий JWT</returns>
-        Task<LoginResponse> LoginAsync(LoginRequest request);
+        Task<TokenDto> LoginAsync(UserLoginDto request);
 
         /// <summary>
         /// Зарегистрировать нового пользователя в системе
         /// </summary>
         /// <param name="request">Запрос на регистрацию</param>
         /// <returns>Ответ на запрос регистрации, содержащий данные созданного пользователя</returns>
-        Task<RegistrationResponse> RegisterAsync(RegistrationRequest request);
+        Task<UserDto> RegisterAsync(UserUpsertDto request);
     }
 }

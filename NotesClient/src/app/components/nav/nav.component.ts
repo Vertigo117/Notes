@@ -35,13 +35,23 @@ export class NavComponent implements OnInit {
     }
   }
     
-    public userName = DEFAULT_USER_NAME;
+  public userName = DEFAULT_USER_NAME;
 
   public onLogin(): void {
     const dialogRef = this.dialog.open(LoginComponent);
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (this.accountService.isAuthenticated()) {
         this.userName = this.getUserName();
+      }
+
+      let isRegistering = result as boolean;
+
+      if (isRegistering) {
+        this.dialog.open(RegisterComponent).afterClosed().subscribe(() => {
+          if (this.accountService.isAuthenticated()) {
+            this.userName = this.getUserName();
+          }
+        })
       }
     });
   }

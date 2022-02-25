@@ -1,0 +1,39 @@
+services:
+  notes-proxy:
+    image: notes-proxy
+    build:
+      context: ./Proxy
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    restart: always
+    
+  notes-client:
+    image: notes-client
+    build:
+      context: ./NotesClient
+      dockerfile: Dockerfile
+    ports:
+      - "9000:80"
+    depends_on: 
+      - notes-api
+      
+  notes-api:
+    image: notes-api
+    build:
+      context: ./Notes
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    depends_on:
+      - notes-postgres
+
+  notes-postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "mysecretpassword"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "notes"

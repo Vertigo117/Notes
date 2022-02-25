@@ -23,9 +23,9 @@
         <div>
             <button class="full-width" mat-raised-button type="submit" [disabled]="!loginForm.valid">Войти</button>
         </div>
-        <!-- <div>
-            <button class="full-width" mat-raised-button color="primary" type="button">Зарегистрироваться</button>
-        </div> -->
+        <div>
+            <button class="full-width" mat-raised-button color="primary" type="button" (click)="onRegister()">Зарегистрироваться</button>
+        </div>
         <div>
             <button class="full-width" mat-raised-button color="accent" type="button" (click)="onCancel()">Отмена</button>
         </div>

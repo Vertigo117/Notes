@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { UserLoginDto } from 'src/app/Models/UserLoginDto';
-import { UserUpsertDto } from 'src/app/Models/UserUpsertDto';
+import { UserLoginDto } from 'src/app/models/UserLoginDto';
+import { UserUpsertDto } from 'src/app/models/UserUpsertDto';
 import { AccountService } from 'src/app/services/account.service';
+import { LoginComponent } from '../login/login.component';
 import { NavComponent } from '../nav/nav.component';
 
 @Component({

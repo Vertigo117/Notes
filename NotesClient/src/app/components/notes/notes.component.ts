@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Editor } from 'ngx-editor';
-import { NoteDto } from 'src/app/Models/NoteDto';
-import { NoteUpsertDto } from 'src/app/Models/NoteUpsertDto';
+import { NoteDto } from 'src/app/models/NoteDto';
+import { NoteUpsertDto } from 'src/app/models/NoteUpsertDto';
 import { NotesService } from 'src/app/services/notes.service';
 
 @Component({
@@ -54,10 +54,14 @@ export class NotesComponent implements OnInit, OnDestroy {
     this.notesService.create(note).subscribe(() => this.getAllNotes());
   }
 
+  public getSelectedNote(note: NoteDto): boolean {
+    return note.Id == this.selectedNoteId;
+  }
+
   public onSaveClick(): void {
     this.notesService.update(this.selectedNoteId, this.noteForm.value).subscribe(() => {
       this.getAllNotes();
-      this.noteForm.reset();
+      //this.noteForm.reset();
     });
   }
 
@@ -66,5 +70,17 @@ export class NotesComponent implements OnInit, OnDestroy {
       this.getAllNotes();
       this.noteForm.reset();
     });
+  }
+
+  public onDateClick(): void {
+    this.notes = this.notes.sort((a, b) => this.getTime(a.CreationDate) - this.getTime(b.CreationDate));
+  }
+
+  public onNameClick(): void {
+    this.notes = this.notes.sort((a, b) => a.Name.localeCompare(b.Name));
+  }
+
+  private getTime(date?: Date): number {
+    return date != null ? new Date(date).getDate() : 0;
   }
 }

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
-import { UserLoginDto } from 'src/app/Models/UserLoginDto';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { UserLoginDto } from 'src/app/models/UserLoginDto';
 import { AccountService } from 'src/app/services/account.service';
 import { NavComponent } from '../nav/nav.component';
+import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<NavComponent>, 
-    private accountService: AccountService) { }
+    private accountService: AccountService,
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -36,9 +38,9 @@ export class LoginComponent implements OnInit {
   public onSubmit(): void {
     const user = this.loginForm.value as UserLoginDto;
     this.accountService.login(user).subscribe({
-      next: (response) => {
+      next: () => {
         if (this.accountService.isAuthenticated()) {
-          this.dialogRef.close(response);
+          this.dialogRef.close();
         }
       }
     });
@@ -46,6 +48,11 @@ export class LoginComponent implements OnInit {
 
   public onCancel(): void {
     this.dialogRef.close();
+  }
+
+  public onRegister(): void {
+    this.dialogRef.close();
+    this.dialog.open(RegisterComponent);
   }
 
 }

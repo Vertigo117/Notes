@@ -23,7 +23,7 @@ export class AccountService {
     private jwtHelper: JwtHelperService) { }
 
     public login(credentials: UserLoginDto): Observable<TokenDto> {
-      const loginUrl = '/api/Account/Login';
+      const loginUrl = '/Account/Login';
       return this.httpClient.post<TokenDto>(this.apiUrl + loginUrl, credentials).pipe(tap({
         next: response => {
           localStorage.setItem(ACCESS_TOKEN_KEY, response.Token);
@@ -65,7 +65,7 @@ export class AccountService {
     }
 
     public register(user: UserUpsertDto): Observable<UserDto> {
-      const registerUrl = '/api/Account/Register';
+      const registerUrl = '/Account/Register';
       return this.httpClient.post<UserDto>(this.apiUrl + registerUrl, user).pipe(tap({
         error: err => this.handleError(err)
       }));

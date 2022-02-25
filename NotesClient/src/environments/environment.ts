@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  notesApi: 'https://localhost:44346',
+  notesApi: 'https://localhost:44346/api',
   allowedDomains: ['localhost:44346'],
-  disallowedRoutes: ['https://localhost:44346/api/Account']
+  disallowedRoutes: ['https://localhost:44346/Account/Login', 'https://localhost:44346/Account/Register']
 };
 
 /*

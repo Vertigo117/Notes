@@ -48,9 +48,9 @@ export class RegisterComponent implements OnInit {
         };
         
         this.accountService.login(credentials).subscribe({
-          next: response => {
+          next: () => {
             if (this.accountService.isAuthenticated()) {
-              this.dialogRef.close(response);
+              this.dialogRef.close();
             }
           }
         })

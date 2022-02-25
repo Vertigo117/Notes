@@ -27,16 +27,18 @@ namespace Notes.Core.Services
             this.mapper = mapper;
         }
 
-        public async Task<CreateNoteResponse> CreateNoteAsync(CreateNoteRequest request, HttpContext httpContext)
+        public async Task<NoteDto> CreateNoteAsync(NoteUpsertDto request, HttpContext httpContext)
         {
             var note = mapper.Map<Note>(request);
+            note.CreationDate = DateTime.Now;
+
             string email = GetUserEmail(httpContext);
             note.User = await repository.Users.GetAsync(email);
 
             repository.Notes.Add(note);
             await repository.SaveChangesAsync();
 
-            return mapper.Map<CreateNoteResponse>(note);
+            return mapper.Map<NoteDto>(note);
         }
 
         private static string GetUserEmail(HttpContext httpContext)
@@ -44,17 +46,17 @@ namespace Notes.Core.Services
             return httpContext.User.FindFirst(ClaimTypes.Email).Value;
         }
 
-        public async Task<IEnumerable<GetNoteResponse>> GetAllNotesAsync(HttpContext httpContext)
+        public async Task<IEnumerable<NoteDto>> GetAllNotesAsync(HttpContext httpContext)
         {
             string email = GetUserEmail(httpContext);
             IEnumerable<Note> userNotes = await repository.Notes.GetAsync(note => note.User.Email == email);
-            return mapper.Map<IEnumerable<GetNoteResponse>>(userNotes);
+            return mapper.Map<IEnumerable<NoteDto>>(userNotes);
         }
 
-        public async Task<GetNoteResponse> GetNoteAsync(int id)
+        public async Task<NoteDto> GetNoteAsync(int id)
         {
             Note note = await repository.Notes.GetAsync(id);
-            return mapper.Map<GetNoteResponse>(note);
+            return mapper.Map<NoteDto>(note);
         }
 
         public async Task DeleteNoteAsync(int id)
@@ -64,7 +66,7 @@ namespace Notes.Core.Services
             await repository.SaveChangesAsync();
         }
 
-        public async Task UpdateNoteAsync(int id, UpdateNoteRequest request)
+        public async Task UpdateNoteAsync(int id, NoteUpsertDto request)
         {
             Note note = await repository.Notes.GetAsync(id);
             mapper.Map(request, note);

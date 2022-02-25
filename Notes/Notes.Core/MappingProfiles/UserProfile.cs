@@ -8,8 +8,8 @@ namespace Notes.Core.MappingProfiles
     {
         public UserProfile()
         {
-            CreateMap<RegistrationRequest, User>();
-            CreateMap<User, RegistrationResponse>();
+            CreateMap<UserUpsertDto, User>();
+            CreateMap<User, UserDto>();
         }
     }
 }

@@ -1,0 +1,68 @@
+<div class="container">
+    <mat-toolbar>
+        <h1>Заметки</h1>
+    </mat-toolbar>
+    <div class="notes-container mat-elevation-z2">
+        <div class="notes">
+            <div class="notes-control">
+                <button class="tile-button" mat-flat-button color="primary" (click)="onAddClick()">
+                    <mat-icon>add</mat-icon>
+                    <span>Добавить заметку</span>
+                </button>
+            </div>
+            <div class="notes-filter">
+                <button class="tile-button" mat-flat-button [mat-menu-trigger-for]="menu">
+                    <div class="option-container">
+                        <span>Фильтр</span>
+                        <mat-icon>expand_more</mat-icon>
+                    </div>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="onDateClick()">Дата</button>
+                    <button mat-menu-item (click)="onNameClick()">Название</button>
+                </mat-menu>
+            </div>
+            <div class="notes-list">
+                <mat-selection-list *ngIf="notes.length > 0" [multiple]="false">
+                    <mat-list-option *ngFor="let note of notes" [value]="note" (click)="onNoteClick(note)" [selected]="getSelectedNote(note)">
+                        <div class="option-container">
+                            <div>
+                                <div matLine>{{note.Name}}</div>
+                                <div matLine style="font-size: small;">{{note.CreationDate | date}}</div>
+                            </div>
+                            <div>
+                                <button mat-icon-button (click)="onDeleteClick(note.Id)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-list-option>
+                </mat-selection-list>
+                <p *ngIf="notes.length == 0">Заметок нет</p>
+            </div>
+        </div>
+        <div class="notes-edit">
+            <form [formGroup]="noteForm">
+                <div class="note-edit-header">
+                    <mat-form-field>
+                        <mat-label>Название заметки</mat-label>
+                        <input matInput type="text" formControlName="Name">
+                        <button *ngIf="noteForm.controls['Name'].value" matSuffix mat-icon-button aria-label="Clear" (click)="noteForm.controls['Name'].setValue('')">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        <mat-error *ngIf="noteForm.controls['Name'].invalid">Заполните заголовок</mat-error>
+                    </mat-form-field>
+                    <button class="save" mat-flat-button (click)="onSaveClick()">
+                        <span>Сохранить</span>
+                        <mat-icon>save</mat-icon>
+                    </button>
+                </div>
+                <div class="NgxEditor__Wrapper">
+                    <ngx-editor-menu [editor]="editor">
+                    </ngx-editor-menu>
+                    <ngx-editor [editor]="editor" formControlName="Text" [placeholder]="'Type here...'"></ngx-editor>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

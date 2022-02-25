@@ -1,0 +1,11 @@
+.container {
+    margin: 1rem;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.container form button {
+    margin-bottom: 10px;
+}

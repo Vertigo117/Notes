@@ -29,8 +29,6 @@ import { RegisterComponent } from './components/register/register.component';
 import { NotesComponent } from './components/notes/notes.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatTableModule } from '@angular/material/table';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -65,8 +63,6 @@ export function tokenGetter() {
     MatInputModule,
     NgxEditorModule,
     FormsModule,
-    MatCardModule,
-    MatTableModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

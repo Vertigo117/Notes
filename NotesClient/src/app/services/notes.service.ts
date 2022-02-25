@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NOTES_API_URL } from '../app-injection-tokens';
-import { NoteDto } from '../Models/NoteDto';
-import { NoteUpsertDto } from '../Models/NoteUpsertDto';
+import { NoteDto } from '../models/NoteDto';
+import { NoteUpsertDto } from '../models/NoteUpsertDto';
 
 @Injectable({
   providedIn: 'root'

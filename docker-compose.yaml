@@ -1,6 +1,7 @@
 services:
   notes-proxy:
     image: notes-proxy
+    container_name: notes-proxy
     build:
       context: ./Proxy
       dockerfile: Dockerfile
@@ -10,6 +11,7 @@ services:
     
   notes-client:
     image: notes-client
+    container_name: notes-client
     build:
       context: ./NotesClient
       dockerfile: Dockerfile
@@ -20,6 +22,7 @@ services:
       
   notes-api:
     image: notes-api
+    container_name: notes-api
     build:
       context: ./Notes
       dockerfile: Dockerfile
@@ -30,6 +33,7 @@ services:
 
   notes-postgres:
     image: postgres
+    container_name: notes-db
     ports:
       - "5432:5432"
     restart: always

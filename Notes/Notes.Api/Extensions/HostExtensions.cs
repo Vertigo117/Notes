@@ -13,8 +13,8 @@ namespace Notes.Api.Extensions
         /// <summary>
         /// Применить миграции EF Core
         /// </summary>
-        /// <param name="host">хост</param>
-        /// <returns>хост</returns>
+        /// <param name="host">Хост</param>
+        /// <returns>Хост</returns>
         public static IHost ApplyMigrations(this IHost host)
         {
             using var scope = host.Services.CreateScope();

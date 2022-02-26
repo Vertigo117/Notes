@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notes.Data.Contexts;
+using Notes.Data.Entities;
 using Notes.Data.Interfaces;
 using Notes.Data.Repositories;
 
@@ -23,6 +24,8 @@ namespace Notes.Data.Extensions
 
             services.AddDbContext<NotesContext>(options => options.UseNpgsql(connectionString));
             services.AddScoped<IUnitOfWork, RepositoryWrapper>();
+            services.AddScoped<IRepository<User>, Repository<User>>();
+            services.AddScoped<IRepository<Note>, Repository<Note>>();
         }
     }
 }

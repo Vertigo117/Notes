@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Data.Contexts;
-using Notes.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +12,11 @@ namespace Notes.Data.Repositories
     /// Обобщённый репозиторий для работы с указанным типом сущностей
     /// </summary>
     /// <typeparam name="TEntity">Тип сущности</typeparam>
-    public class IRepository<TEntity> : Interfaces.IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : Interfaces.IRepository<TEntity> where TEntity : class
     {
         private readonly DbSet<TEntity> entities;
 
-        public IRepository(NotesContext context)
+        public Repository(NotesContext context)
         {
             entities = context.Set<TEntity>();
         }

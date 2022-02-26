@@ -14,29 +14,29 @@ namespace Notes.Data.Repositories
     /// </summary>
     public class RepositoryWrapper : IUnitOfWork
     {
-        private IRepository<User> users;
-        private IRepository<Note> notes;
+        private readonly Interfaces.IRepository<User> users;
+        private readonly Interfaces.IRepository<Note> notes;
         private readonly NotesContext context;
 
-        public RepositoryWrapper(NotesContext context)
+        public RepositoryWrapper(NotesContext context, Interfaces.IRepository<User> users, Interfaces.IRepository<Note> notes)
         {
             this.context = context;
+            this.users = users;
+            this.notes = notes;
         }
 
-        public IRepository<User> Users
+        public Interfaces.IRepository<User> Users
         { 
             get
             {
-                users ??= new Repository<User>(context);
                 return users;
             }
         }
 
-        public IRepository<Note> Notes
+        public Interfaces.IRepository<Note> Notes
         {
             get
             {
-                notes ??= new Repository<Note>(context);
                 return notes;
             }
         }

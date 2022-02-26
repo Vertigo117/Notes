@@ -13,11 +13,11 @@ namespace Notes.Data.Repositories
     /// Обобщённый репозиторий для работы с указанным типом сущностей
     /// </summary>
     /// <typeparam name="TEntity">Тип сущности</typeparam>
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class IRepository<TEntity> : Interfaces.IRepository<TEntity> where TEntity : class
     {
         private readonly DbSet<TEntity> entities;
 
-        public Repository(NotesContext context)
+        public IRepository(NotesContext context)
         {
             entities = context.Set<TEntity>();
         }

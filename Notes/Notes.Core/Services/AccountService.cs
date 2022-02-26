@@ -30,11 +30,11 @@ namespace Notes.Core.Services
             this.mapper = mapper;
         }
 
-        public async Task<TokenDto> LoginAsync(UserLoginDto request)
+        public async Task<TokenDto> LoginAsync(UserLoginDto credentials)
         {
-            User user = await repository.Users.GetAsync(request.Email);
+            User user = await repository.Users.GetAsync(credentials.Email);
 
-            if (user == null || !encryptionService.ValidatePassword(request.Password, user.PasswordHash))
+            if (user == null || !encryptionService.ValidatePassword(credentials.Password, user.PasswordHash))
             {
                 return null;
             }
@@ -42,29 +42,29 @@ namespace Notes.Core.Services
             return new TokenDto 
             {
                 UserName = user.Name,
-                Token = jwtService.Generate(request.Email) 
+                Token = jwtService.Generate(credentials.Email) 
             };
         }
 
-        public async Task<UserDto> RegisterAsync(UserUpsertDto request)
+        public async Task<UserDto> RegisterAsync(UserUpsertDto user)
         {
-            if (await IsExistingUser(request.Email))
+            if (await IsExistingUser(user))
             {
                 return null;
             }
 
-            var user = mapper.Map<User>(request);
-            user.PasswordHash = encryptionService.HashPassword(request.Password);
+            var userEntity = mapper.Map<User>(user);
+            userEntity.PasswordHash = encryptionService.HashPassword(user.Password);
 
-            repository.Users.Add(user);
+            repository.Users.Add(userEntity);
             await repository.SaveChangesAsync();
 
-            return mapper.Map<UserDto>(user);
+            return mapper.Map<UserDto>(userEntity);
         }
 
-        private async Task<bool> IsExistingUser(string email)
+        private async Task<bool> IsExistingUser(UserUpsertDto user)
         {
-            return (await repository.Users.GetAsync(user => user.Email == email)).Any();
+            return (await repository.Users.GetAsync(userEntity => userEntity.Email == user.Email)).Any();
         }
     }
 }

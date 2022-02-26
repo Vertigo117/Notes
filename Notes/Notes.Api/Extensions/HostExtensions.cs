@@ -5,8 +5,16 @@ using Notes.Data.Contexts;
 
 namespace Notes.Api.Extensions
 {
+    /// <summary>
+    /// Методы расширений для конфигурации хоста
+    /// </summary>
     public static class HostExtensions
     {
+        /// <summary>
+        /// Применить миграции EF Core
+        /// </summary>
+        /// <param name="host">хост</param>
+        /// <returns>хост</returns>
         public static IHost ApplyMigrations(this IHost host)
         {
             using var scope = host.Services.CreateScope();

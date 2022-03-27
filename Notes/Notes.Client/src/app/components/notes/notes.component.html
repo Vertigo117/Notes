@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="note-list-controls mat-elevation-z2">
+        <button mat-raised-button (click)="onAddClick()">
+            <mat-icon>add</mat-icon>
+            <span>Новая заметка</span>
+        </button>
+    </div>
+    <div class="note-edit-controls mat-elevation-z2"></div>
+    <div class="note-list" *ngFor="let note of notes">
+        <mat-selection-list *ngIf="notes.length > 0" [multiple]="false">
+            <mat-list-option *ngFor="let note of notes" [value]="note" (click)="onNoteClick(note)">
+                <div class="note">
+                    <div>
+                        <div matLine>{{note.name}}</div>
+                        <div matLine style="font-size: small;">{{note.creationDate | date}}</div>
+                    </div>
+                    <div>
+                        <button mat-icon-button (click)="onDeleteClick(note.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+            </mat-list-option>
+        </mat-selection-list>
+        <p *ngIf="notes.length == 0">Заметок нет</p>
+    </div>
+    <div class="note-edit">
+        <form [formGroup]="editorForm">
+            <div class="editor-controls">
+                <mat-form-field>
+                    <mat-label>Название заметки</mat-label>
+                    <input matInput type="text" formControlName="name" autocomplete="off">
+                    <button *ngIf="editorForm.get('name')" matSuffix mat-icon-button aria-label="Clear" (click)="editorForm.get('name')?.setValue('')">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    <mat-error *ngIf="editorForm.get('name')?.hasError('required')">Заполните заголовок</mat-error>
+                </mat-form-field>
+                <button type="button" class="save" mat-flat-button (click)="onSaveClick()">
+                    <span>Сохранить</span>
+                    <mat-icon>save</mat-icon>
+                </button>
+            </div>
+            <div class="editor">
+                <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+                <ngx-editor [editor]="editor" formControlName="text" [placeholder]="'Type here...'"></ngx-editor>
+            </div>
+        </form>
+    </div>
+</div>

@@ -3,12 +3,14 @@ using AutoMapper;
 using Moq;
 using Notes.Core.Contracts;
 using Notes.Core.Interfaces;
+using Notes.Core.Models;
 using Notes.Core.Services;
 using Notes.Core.Tests.Attributes;
 using Notes.Data.Entities;
 using Notes.Data.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
@@ -22,14 +24,14 @@ namespace Notes.Core.Tests
         public async Task LoginAsync_ProperCredentialsPassed_RepositoryGetAsyncMethodCalled(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             AccountService accountService,
-            UserLoginDto credentials,
+            UserLoginDto credentialsDto,
             User user)
         {
             //Arrange
             unitOfWorkMock.Setup(unitOfWork => unitOfWork.Users.GetAsync(It.IsAny<object>())).ReturnsAsync(user);
 
             //Act
-            await accountService.LoginAsync(credentials);
+            await accountService.LoginAsync(credentialsDto);
 
             //Assert
             unitOfWorkMock.Verify(repo => repo.Users.GetAsync(It.IsAny<string>()), Times.Once);
@@ -37,20 +39,20 @@ namespace Notes.Core.Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task LoginAsync_UserNotFound_ReturnsNull(
+        public async Task LoginAsync_UserNotFound_ReturnsUnsuccessfulResult(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             AccountService accountService,
-            UserLoginDto credentials)
+            UserLoginDto credentialsDto)
         {
             //Arrange
             User user = null;
             unitOfWorkMock.Setup(unitOfWork => unitOfWork.Users.GetAsync(It.IsAny<object>())).ReturnsAsync(user);
 
             //Act
-            TokenDto actual = await accountService.LoginAsync(credentials);
+            Result<TokenDto> actual = await accountService.LoginAsync(credentialsDto);
 
             //Assert
-            Assert.Null(actual);
+            Assert.False(actual.IsSuccess);
         }
 
         [Theory]
@@ -59,7 +61,7 @@ namespace Notes.Core.Tests
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             [Frozen] Mock<IEncryptionService> encryptionService,
             AccountService accountService,
-            UserLoginDto credentials,
+            UserLoginDto credentialsDto,
             User user)
         {
             //Arrange
@@ -68,7 +70,7 @@ namespace Notes.Core.Tests
                 .Setup(service => service.ValidatePassword(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             //Act
-            await accountService.LoginAsync(credentials);
+            await accountService.LoginAsync(credentialsDto);
 
             //Assert
             encryptionService.Verify(service =>
@@ -77,11 +79,11 @@ namespace Notes.Core.Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task LoginAsync_InvorrectPassword_ReturnsNull(
+        public async Task LoginAsync_InvorrectPassword_ReturnsUnsuccessfulResult(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             [Frozen] Mock<IEncryptionService> encryptionService,
             AccountService accountService,
-            UserLoginDto credentials,
+            UserLoginDto credentialsDto,
             User user)
         {
             //Arrange
@@ -91,10 +93,10 @@ namespace Notes.Core.Tests
                 .Returns(false);
 
             //Act
-            TokenDto actual = await accountService.LoginAsync(credentials);
+            Result<TokenDto> actual = await accountService.LoginAsync(credentialsDto);
 
             //Assert
-            Assert.Null(actual);
+            Assert.False(actual.IsSuccess);
         }
 
         [Theory]
@@ -104,7 +106,7 @@ namespace Notes.Core.Tests
             [Frozen] Mock<IEncryptionService> encryptionServiceMock,
             [Frozen] Mock<IJwtService> jwtServiceMock,
             AccountService accountService,
-            UserLoginDto credentials,
+            UserLoginDto credentialsDto,
             User user,
             string jwt)
         {
@@ -113,23 +115,23 @@ namespace Notes.Core.Tests
             encryptionServiceMock
                 .Setup(service => service.ValidatePassword(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(true);
-            jwtServiceMock.Setup(service => service.Generate(It.IsAny<string>())).Returns(jwt);
+            jwtServiceMock.Setup(service => service.Generate(It.IsAny<string>(), It.IsAny<string>())).Returns(jwt);
 
 
             //Act
-            await accountService.LoginAsync(credentials);
+            await accountService.LoginAsync(credentialsDto);
 
             //Assert
-            jwtServiceMock.Verify(service => service.Generate(It.IsAny<string>()), Times.Once);
+            jwtServiceMock.Verify(service => service.Generate(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task LoginAsync_CorrectPassword_ProperTokenDtoReturned(
+        public async Task LoginAsync_CorrectPassword_SuccessfulResultReturned(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             [Frozen] Mock<IEncryptionService> encryptionServiceMock,
             AccountService accountService,
-            UserLoginDto credentials,
+            UserLoginDto credentialsDto,
             User user)
         {
             //Arrange
@@ -139,12 +141,11 @@ namespace Notes.Core.Tests
                 .Returns(true);
 
             //Act
-            TokenDto actual = await accountService.LoginAsync(credentials);
+            Result<TokenDto> actual = await accountService.LoginAsync(credentialsDto);
 
             //Assert
-            Assert.NotNull(actual);
-            Assert.IsType<TokenDto>(actual);
-            Assert.Equal(actual.UserName, user.Name);
+            Assert.True(actual.IsSuccess);
+            Assert.NotNull(actual.Data);
         }
 
         [Theory]
@@ -152,7 +153,7 @@ namespace Notes.Core.Tests
         public async Task RegisterAsync_UserPassed_RepositoryGetAsyncMethodCalled(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             AccountService accountService,
-            UserUpsertDto user,
+            UserUpsertDto userDto,
             IEnumerable<User> users)
         {
             //Arrange
@@ -161,7 +162,7 @@ namespace Notes.Core.Tests
                 .ReturnsAsync(users);
 
             //Act
-            await accountService.RegisterAsync(user);
+            await accountService.RegisterAsync(userDto);
 
             //Assert
             unitOfWorkMock
@@ -170,10 +171,10 @@ namespace Notes.Core.Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task RegisterAsync_ExistingUserPassed_ReturnsNull(
+        public async Task RegisterAsync_ExistingUserPassed_ReturnsUnsuccessfulResult(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             AccountService accountService,
-            UserUpsertDto user,
+            UserUpsertDto userDto,
             IEnumerable<User> users)
         {
             //Arrange
@@ -182,10 +183,32 @@ namespace Notes.Core.Tests
                 .ReturnsAsync(users);
 
             //Act
-            UserDto actual = await accountService.RegisterAsync(user);
+            Result<UserDto> actual = await accountService.RegisterAsync(userDto);
 
             //Assert
-            Assert.Null(actual);
+            Assert.NotNull(actual);
+            Assert.False(actual.IsSuccess);
+            Assert.False(string.IsNullOrEmpty(actual.Message));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task RegisterAsync_PasswordConfirmationMismatch_ReturnsUnsuccessfulResult(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            [Frozen] UserUpsertDto userDto,
+            AccountService accountService,
+            User user)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Users.GetAsync(It.IsAny<string>())).ReturnsAsync(user);
+
+            //Act
+            Result<UserDto> actual = await accountService.RegisterAsync(userDto);
+
+            //Assert
+            Assert.NotNull(actual);
+            Assert.False(actual.IsSuccess);
+            Assert.False(string.IsNullOrEmpty(actual.Message));
         }
 
         [Theory]
@@ -193,8 +216,8 @@ namespace Notes.Core.Tests
         public async Task RegisterAsync_NonExistingUserPassed_MapperMapUpsertDtoMethodCalled(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             [Frozen] Mock<IMapper> mapperMock,
+            [Frozen] UserUpsertDto userDto,
             AccountService accountService,
-            UserUpsertDto user,
             User userEntity)
         {
             //Arrange
@@ -202,9 +225,10 @@ namespace Notes.Core.Tests
                 .Setup(unitOfWork => unitOfWork.Users.GetAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(new List<User>());
             mapperMock.Setup(mapper => mapper.Map<User>(It.IsAny<UserUpsertDto>())).Returns(userEntity);
+            userDto.ConfirmPassword = userDto.Password;
 
             //Act
-            await accountService.RegisterAsync(user);
+            await accountService.RegisterAsync(userDto);
 
             //Assert
             mapperMock.Verify(mapper => mapper.Map<User>(It.IsAny<UserUpsertDto>()), Times.Once);
@@ -216,22 +240,23 @@ namespace Notes.Core.Tests
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             [Frozen] Mock<IMapper> mapperMock,
             [Frozen] Mock<IEncryptionService> encryptionServiceMock,
+            [Frozen] UserUpsertDto userDto,
             AccountService accountService,
-            UserUpsertDto user,
-            User userEntity,
+            User user,
             string passwordHash)
         {
             //Arrange
             unitOfWorkMock
                 .Setup(unitOfwork => unitOfwork.Users.GetAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(new List<User>());
-            mapperMock.Setup(mapper => mapper.Map<User>(It.IsAny<UserUpsertDto>())).Returns(userEntity);
+            mapperMock.Setup(mapper => mapper.Map<User>(It.IsAny<UserUpsertDto>())).Returns(user);
             encryptionServiceMock
                 .Setup(encryptionService => encryptionService.HashPassword(It.IsAny<string>()))
                 .Returns(passwordHash);
+            userDto.ConfirmPassword = userDto.Password;
 
             //Act
-            await accountService.RegisterAsync(user);
+            await accountService.RegisterAsync(userDto);
 
             //Assert
             encryptionServiceMock
@@ -244,22 +269,23 @@ namespace Notes.Core.Tests
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             [Frozen] Mock<IMapper> mapperMock,
             [Frozen] Mock<IEncryptionService> encryptionServiceMock,
+            [Frozen] UserUpsertDto userDto,
             AccountService accountService,
-            UserUpsertDto user,
-            User userEntity,
+            User user,
             string passwordHash)
         {
             //Arrange
             unitOfWorkMock
                 .Setup(unitOfwork => unitOfwork.Users.GetAsync(It.IsAny<Expression<Func<User, bool>>>()))
                 .ReturnsAsync(new List<User>());
-            mapperMock.Setup(mapper => mapper.Map<User>(It.IsAny<UserUpsertDto>())).Returns(userEntity);
+            mapperMock.Setup(mapper => mapper.Map<User>(It.IsAny<UserUpsertDto>())).Returns(user);
             encryptionServiceMock
                 .Setup(encryptionService => encryptionService.HashPassword(It.IsAny<string>()))
                 .Returns(passwordHash);
+            userDto.ConfirmPassword = userDto.Password;
 
             //Act
-            await accountService.RegisterAsync(user);
+            await accountService.RegisterAsync(userDto);
 
             //Assert
             unitOfWorkMock.Verify(unitOfWork => unitOfWork.SaveChangesAsync(), Times.Once);
@@ -271,8 +297,8 @@ namespace Notes.Core.Tests
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             [Frozen] Mock<IMapper> mapperMock,
             [Frozen] Mock<IEncryptionService> encryptionServiceMock,
+            [Frozen] UserUpsertDto userDto,
             AccountService accountService,
-            UserUpsertDto user,
             User userEntity,
             string passwordHash)
         {
@@ -284,9 +310,10 @@ namespace Notes.Core.Tests
             encryptionServiceMock
                 .Setup(encryptionService => encryptionService.HashPassword(It.IsAny<string>()))
                 .Returns(passwordHash);
+            userDto.ConfirmPassword = userDto.Password;
 
             //Act
-            await accountService.RegisterAsync(user);
+            await accountService.RegisterAsync(userDto);
 
             //Assert
             unitOfWorkMock.Verify(unitOfWork => unitOfWork.Users.Add(It.IsAny<User>()), Times.Once);
@@ -298,8 +325,8 @@ namespace Notes.Core.Tests
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             [Frozen] Mock<IMapper> mapperMock,
             [Frozen] Mock<IEncryptionService> encryptionServiceMock,
+            [Frozen] UserUpsertDto userDto,
             AccountService accountService,
-            UserUpsertDto user,
             User userEntity,
             UserDto result,
             string passwordHash)
@@ -313,12 +340,158 @@ namespace Notes.Core.Tests
             encryptionServiceMock
                 .Setup(encryptionService => encryptionService.HashPassword(It.IsAny<string>()))
                 .Returns(passwordHash);
+            userDto.ConfirmPassword = userDto.Password;
 
             //Act
-            await accountService.RegisterAsync(user);
+            await accountService.RegisterAsync(userDto);
 
             //Assert
             mapperMock.Verify(mapper => mapper.Map<UserDto>(It.IsAny<User>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task DeleteAsync_EmailPassed_RepositoryUsersGetAsyncMethodCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            AccountService accountService,
+            User user)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Users.GetAsync(It.IsAny<string>())).ReturnsAsync(user);
+
+            //Act
+            await accountService.DeleteAsync(user.Email);
+
+            //Assert
+            unitOfWorkMock.Verify(mock => mock.Users.GetAsync(It.IsAny<string>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task DeleteAsync_ExistingEmailPassed_RepositoryUsersRemoveMethodCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            AccountService accountService,
+            User user)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Users.GetAsync(It.IsAny<string>())).ReturnsAsync(user);
+
+            //Act
+            await accountService.DeleteAsync(user.Email);
+
+            //Assert
+            unitOfWorkMock.Verify(mock => mock.Users.Remove(It.IsAny<User>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task DeleteAsync_ExistingEmailPassed_RepositorySaveChangesAsyncMethodCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            AccountService accountService,
+            User user)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Users.GetAsync(It.IsAny<string>())).ReturnsAsync(user);
+
+            //Act
+            await accountService.DeleteAsync(user.Email);
+
+            //Assert
+            unitOfWorkMock.Verify(mock => mock.SaveChangesAsync(), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task DeleteAsync_NonExistingEmailPassed_RepositorySaveChangesAsyncMethodNotCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            AccountService accountService,
+            string email)
+        {
+            //Arrange
+            User user = null;
+            unitOfWorkMock.Setup(mock => mock.Users.GetAsync(It.IsAny<string>())).ReturnsAsync(user);
+
+            //Act
+            await accountService.DeleteAsync(email);
+
+            //Assert
+            unitOfWorkMock.Verify(mock => mock.SaveChangesAsync(), Times.Never);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task DeleteAsync_NonExistingUserIdPassed_RepositoryUsersRemoveMethodNotCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            AccountService accountService,
+            string email)
+        {
+            //Arrange
+            User user = null;
+            unitOfWorkMock.Setup(mock => mock.Users.GetAsync(It.IsAny<string>())).ReturnsAsync(user);
+
+            //Act
+            await accountService.DeleteAsync(email);
+
+            //Assert
+            unitOfWorkMock.Verify(mock => mock.Users.Remove(It.IsAny<User>()), Times.Never);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetAsync_RepositoryUsersGetAsyncMethodCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            IEnumerable<User> users,
+            AccountService accountService)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Users.GetAsync()).ReturnsAsync(users);
+
+            //Act
+            await accountService.GetAsync();
+
+            //Assert
+            unitOfWorkMock.Verify(mock => mock.Users.GetAsync(), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetAsync_MapperMapMethodCalled(
+            [Frozen] Mock<IUnitOfWork> unitofWorkMock,
+            [Frozen] Mock<IMapper> mapperMock,
+            IEnumerable<User> users,
+            IEnumerable<UserDto> userDtos,
+            AccountService accountService)
+        {
+            //Arrange
+            unitofWorkMock.Setup(mock => mock.Users.GetAsync()).ReturnsAsync(users);
+            mapperMock.Setup(mock => mock.Map<IEnumerable<UserDto>>(It.IsAny<IEnumerable<User>>())).Returns(userDtos);
+
+            //Act
+            await accountService.GetAsync();
+
+            //Assert
+            mapperMock.Verify(mock => mock.Map<IEnumerable<UserDto>>(It.IsAny<IEnumerable<User>>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetAsync_UserDtoCollectionReturned(
+            [Frozen] Mock<IUnitOfWork> unitofWorkMock,
+            [Frozen] Mock<IMapper> mapperMock,
+            IEnumerable<User> users,
+            IEnumerable<UserDto> userDtos,
+            AccountService accountService)
+        {
+            //Arrange
+            unitofWorkMock.Setup(mock => mock.Users.GetAsync()).ReturnsAsync(users);
+            mapperMock.Setup(mock => mock.Map<IEnumerable<UserDto>>(It.IsAny<IEnumerable<User>>())).Returns(userDtos);
+
+            //Act
+            IEnumerable<UserDto> expected = await accountService.GetAsync();
+
+            //Assert
+            Assert.NotNull(expected);
+            Assert.IsType<List<UserDto>>(expected.ToList());
         }
     }
 }

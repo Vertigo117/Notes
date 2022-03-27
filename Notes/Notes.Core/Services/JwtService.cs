@@ -15,24 +15,33 @@ namespace Notes.Core.Services
     /// </summary>
     public class JwtService : IJwtService
     {
-        private readonly AuthSettings authSettings;
+        private readonly IOptions<AuthSettings> authSettings;
+
+        private AuthSettings AuthSettings 
+        { 
+            get
+            {
+                return authSettings.Value;
+            }
+        }
 
         public JwtService(IOptions<AuthSettings> authSettings)
         {
-            this.authSettings = authSettings.Value;
+            this.authSettings = authSettings;
         }
 
-        public string Generate(string email)
+        public string Generate(string email, string name)
         {
-            byte[] key = Encoding.ASCII.GetBytes(authSettings.Secret);
+            byte[] key = Encoding.ASCII.GetBytes(AuthSettings.Secret);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Email, email)
+                    new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.Name, name),
                 }),
-                Expires = DateTime.UtcNow.AddHours(authSettings.LifeTimeHours),
+                Expires = DateTime.UtcNow.AddHours(AuthSettings.LifeTimeHours),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Notes.Core.Contracts;
 using Notes.Core.Interfaces;
+using Notes.Core.Models;
 using Notes.Data.Entities;
 using Notes.Data.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,41 +32,74 @@ namespace Notes.Core.Services
             this.mapper = mapper;
         }
 
-        public async Task<TokenDto> LoginAsync(UserLoginDto credentials)
+        public async Task<Result<TokenDto>> LoginAsync(UserLoginDto userLoginDto)
         {
-            User user = await repository.Users.GetAsync(credentials.Email);
+            User user = await repository.Users.GetAsync(userLoginDto.Email);
 
-            if (user == null || !encryptionService.ValidatePassword(credentials.Password, user.PasswordHash))
+            if (user == null)
             {
-                return null;
+                return new Result<TokenDto>("Пользователя с таким адресом электронной почты не существует");
             }
 
-            return new TokenDto 
+            if (!encryptionService.ValidatePassword(userLoginDto.Password, user.PasswordHash))
             {
-                UserName = user.Name,
-                Token = jwtService.Generate(credentials.Email) 
-            };
+                return new Result<TokenDto>("Пароль введён неверно");
+            }
+
+            var jwt = jwtService.Generate(userLoginDto.Email, user.Name);
+            var data = new TokenDto { Token = jwt };
+            return new Result<TokenDto>(data);
         }
 
-        public async Task<UserDto> RegisterAsync(UserUpsertDto user)
+        public async Task<Result<UserDto>> RegisterAsync(UserUpsertDto userUpsertDto)
         {
-            if (await IsExistingUser(user))
+            if (await IsExistingUser(userUpsertDto))
             {
-                return null;
+                return new Result<UserDto>("Пользователь с таким адресом электронной почты уже существует");
             }
 
-            var userEntity = mapper.Map<User>(user);
-            userEntity.PasswordHash = encryptionService.HashPassword(user.Password);
+            if (IsPasswordConfirmed(userUpsertDto))
+            {
+                return new Result<UserDto>("Пароль и его подтверждение должны совпадать");
+            }
 
-            repository.Users.Add(userEntity);
+            var user = mapper.Map<User>(userUpsertDto);
+            user.PasswordHash = encryptionService.HashPassword(userUpsertDto.Password);
+
+            repository.Users.Add(user);
             await repository.SaveChangesAsync();
 
-            return mapper.Map<UserDto>(userEntity);
+            var data = mapper.Map<UserDto>(user);
+            return new Result<UserDto>(data);
+        }
+
+        private static bool IsPasswordConfirmed(UserUpsertDto user)
+        {
+            return user.Password != user.ConfirmPassword;
+        }
+
+        public async Task DeleteAsync(string email)
+        {
+            User userEntity = await repository.Users.GetAsync(email);
+
+            if (userEntity == null)
+            {
+                return;
+            }
+
+            repository.Users.Remove(userEntity);
+            await repository.SaveChangesAsync();
         }
 
         private async Task<bool> IsExistingUser(UserUpsertDto user)
         {
             return (await repository.Users.GetAsync(userEntity => userEntity.Email == user.Email)).Any();
+        }
+
+        public async Task<IEnumerable<UserDto>> GetAsync()
+        {
+            IEnumerable<User> users = await repository.Users.GetAsync();
+            return mapper.Map<IEnumerable<UserDto>>(users);
         }
     }
 }

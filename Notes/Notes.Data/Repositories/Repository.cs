@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Data.Contexts;
+using Notes.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Notes.Data.Repositories
     /// Обобщённый репозиторий для работы с указанным типом сущностей
     /// </summary>
     /// <typeparam name="TEntity">Тип сущности</typeparam>
-    public class Repository<TEntity> : Interfaces.IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly DbSet<TEntity> entities;
 
@@ -44,6 +45,11 @@ namespace Notes.Data.Repositories
         public void Update(TEntity entity)
         {
             entities.Update(entity);
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAsync()
+        {
+            return await entities.ToListAsync();
         }
     }
 }

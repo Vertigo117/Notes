@@ -1,14 +1,25 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Notes.Api.Extensions;
+using System;
 
 namespace Notes.Api
 {
     public class Program
     {
+        private const string EnvironmentVariableKey = "ASPNETCORE_ENVIRONMENT";
+        private const string DevelopmentEnvironmentVariableValue = "Development";
+
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().ApplyMigrations().Run();
+            IHost host = CreateHostBuilder(args).Build();
+
+            if (!IsDevelopment())
+            {
+                host.ApplyMigrations();
+            }
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -17,5 +28,10 @@ namespace Notes.Api
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        private static bool IsDevelopment()
+        {
+            return Environment.GetEnvironmentVariable(EnvironmentVariableKey) == DevelopmentEnvironmentVariableValue;
+        }
     }
 }

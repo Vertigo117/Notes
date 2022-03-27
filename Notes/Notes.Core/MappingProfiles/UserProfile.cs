@@ -10,6 +10,7 @@ namespace Notes.Core.MappingProfiles
         {
             CreateMap<UserUpsertDto, User>();
             CreateMap<User, UserDto>();
+            CreateMap<User, TokenDto>();
         }
     }
 }

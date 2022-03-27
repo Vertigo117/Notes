@@ -4,6 +4,7 @@ using Notes.Core.Contracts;
 using Notes.Core.Interfaces;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Notes.Api.Controllers
@@ -18,7 +19,27 @@ namespace Notes.Api.Controllers
         {
             this.notesService = notesService;
         }
-        
+
+        /// <summary>
+        /// Получить список всех заметок пользователя
+        /// </summary>
+        /// <returns>Результат операции</returns>
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((typeof(IEnumerable<NoteDto>)), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> Get()
+        {
+            string email = GetUserMail();
+            IEnumerable<NoteDto> response = await notesService.GetAllNotesAsync(email);
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Получить заметку с указанным уникальным идентификатором
+        /// </summary>
+        /// <param name="id">Уникальный идентификатор заметки</param>
+        /// <returns>Результат выполнения операции</returns>
         [HttpGet("{id}")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
@@ -29,26 +50,32 @@ namespace Notes.Api.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Создать новую заметку
+        /// </summary>
+        /// <param name="noteUpsertDto">Данные заметки</param>
+        /// <returns>Результат операции</returns>
         [HttpPost]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType((typeof(NoteUpsertDto)), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> Create([FromBody] NoteUpsertDto request)
+        public async Task<ActionResult> Create([FromBody] NoteUpsertDto noteUpsertDto)
         {
-            NoteDto response = await notesService.CreateNoteAsync(request, HttpContext);
-            return Ok(response);
-        }
-        
-        [HttpGet]
-        [Authorize]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        [ProducesResponseType((typeof(IEnumerable<NoteDto>)), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetAll()
-        {
-            IEnumerable<NoteDto> response = await notesService.GetAllNotesAsync(HttpContext);
+            string email = GetUserMail();
+            NoteDto response = await notesService.CreateNoteAsync(noteUpsertDto, email);
             return Ok(response);
         }
 
+        private string GetUserMail()
+        {
+            return HttpContext.User.FindFirstValue(ClaimTypes.Email);
+        }
+
+        /// <summary>
+        /// Удалить заметку с указанным уникальным идентификатором
+        /// </summary>
+        /// <param name="id">Уникальный идентификатор заметки</param>
+        /// <returns>Результат операции</returns>
         [HttpDelete("{id}")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
@@ -67,12 +94,18 @@ namespace Notes.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Обновить данные заметки
+        /// </summary>
+        /// <param name="id">Уникальный идентификатор заметки</param>
+        /// <param name="noteUpsertDto">Данные для обновления</param>
+        /// <returns>Результат операции</returns>
         [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] NoteUpsertDto request)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] NoteUpsertDto noteUpsertDto)
         {
             NoteDto note = await notesService.GetNoteAsync(id);
 
@@ -81,7 +114,7 @@ namespace Notes.Api.Controllers
                 return NotFound();
             }
 
-            await notesService.UpdateNoteAsync(id, request);
+            await notesService.UpdateNoteAsync(id, noteUpsertDto);
             return Ok();
         }
     }

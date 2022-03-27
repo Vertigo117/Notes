@@ -1,0 +1,40 @@
+.sidenav-container {
+    height: 100%;
+}
+
+.sidenav {
+    width: 200px;
+}
+
+.sidenav .mat-toolbar {
+    background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.logo mat-icon {
+    margin-right: 10px;
+    position: relative;
+    top: 3px
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-logo {
+    margin-right: 5px;
+}
+
+.expand-errow {
+    margin-left: 20px;
+}
+
+.navigation-links mat-list-item mat-icon {
+    margin-right: 10px;
+}

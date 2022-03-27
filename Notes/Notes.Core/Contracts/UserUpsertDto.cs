@@ -16,6 +16,11 @@
         public string Password { get; set; }
 
         /// <summary>
+        /// Повтор пароля
+        /// </summary>
+        public string ConfirmPassword { get; set; }
+
+        /// <summary>
         /// Имя
         /// </summary>
         public string Name { get; set; }

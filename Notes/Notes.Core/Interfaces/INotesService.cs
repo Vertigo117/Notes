@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Notes.Core.Contracts;
+﻿using Notes.Core.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,17 +19,17 @@ namespace Notes.Core.Interfaces
         /// <summary>
         /// Обработать запрос на создание заметки пользователя
         /// </summary>
-        /// <param name="request">Запрос на создание заметки</param>
-        /// <param name="httpContext">Контекст запроса</param>
+        /// <param name="noteUpsertDto">Данные для создания заметки</param>
+        /// <param name="email">Адрес электронной почты пользователя</param>
         /// <returns>Ответ на запрос создания заметки, который содержит данные созданной заметки</returns>
-        Task<NoteDto> CreateNoteAsync(NoteUpsertDto request, HttpContext httpContext);
+        Task<NoteDto> CreateNoteAsync(NoteUpsertDto noteUpsertDto, string email);
 
         /// <summary>
         /// Обработать запрос на получение заметок пользователя
         /// </summary>
-        /// <param name="httpContext">Контекст запроса</param>
+        /// <param name="email">Адрес электронной почты пользователя</param>
         /// <returns>Результат выполнения запроса, который содержит коллекцию заметок пользователя</returns>
-        Task<IEnumerable<NoteDto>> GetAllNotesAsync(HttpContext httpContext);
+        Task<IEnumerable<NoteDto>> GetAllNotesAsync(string email);
 
         /// <summary>
         /// Удалить заметку с указанным уникальным идентификатором
@@ -43,8 +42,8 @@ namespace Notes.Core.Interfaces
         /// Обработать запрос на обновление данных заметки
         /// </summary>
         /// <param name="id">Уникальный идентификатор заметки</param>
-        /// <param name="request">Данные для обновление</param>
+        /// <param name="noteUpsertDto">Данные для обновления</param>
         /// <returns>Результат выполнения асинхронной операции</returns>
-        Task UpdateNoteAsync(int id, NoteUpsertDto request);
+        Task UpdateNoteAsync(int id, NoteUpsertDto noteUpsertDto);
     }
 }

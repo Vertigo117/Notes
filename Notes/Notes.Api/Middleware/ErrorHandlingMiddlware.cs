@@ -41,7 +41,7 @@ namespace Notes.Api.Middleware
 
         private static async Task WriteErrorToContext(Error error, HttpContext httpContext, int statusCode)
         {
-            string json = JsonConvert.SerializeObject(error);
+            string json = JsonConvert.SerializeObject(error, JsonSerializationSettings.CamelCase());
             HttpResponse response = httpContext.Response;
             response.StatusCode = statusCode;
             response.ContentType = "application/json";

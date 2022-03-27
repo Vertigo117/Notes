@@ -1,0 +1,41 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+        <mat-toolbar>Меню</mat-toolbar>
+        <mat-nav-list class="navigation-links">
+            <mat-list-item routerLink="">
+                <mat-icon mat-list-icon>home</mat-icon>
+                <span>Главная</span>
+            </mat-list-item>
+            <mat-list-item routerLink="/navigation/notes">
+                <mat-icon mat-list-icon>notes</mat-icon>
+                <span>Заметки</span>
+            </mat-list-item>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar class="toolbar" color="primary">
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+            <div class="logo">
+                <mat-icon>auto_stories</mat-icon>
+                <span>Notes</span>
+            </div>
+            <div class="user-info">
+                <button mat-stroked-button [matMenuTriggerFor]="menu">
+                    <mat-icon class="user-logo">account_circle</mat-icon>
+                    <span>{{user?.unique_name}}</span>
+                    <mat-icon class="expand-errow">expand_more</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="onLogout()">
+                    <mat-icon>logout</mat-icon>
+                    <span>Выйти</span>
+                  </button>
+                </mat-menu>
+            </div>
+        </mat-toolbar>
+        <!-- Add Content Here -->
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

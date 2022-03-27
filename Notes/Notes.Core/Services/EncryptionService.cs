@@ -1,5 +1,4 @@
 ﻿using Notes.Core.Interfaces;
-using System;
 
 namespace Notes.Core.Services
 {

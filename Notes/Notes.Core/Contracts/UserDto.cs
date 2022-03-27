@@ -19,10 +19,5 @@
         /// Имя
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Захешированный пароль
-        /// </summary>
-        public string PasswordHash { get; set; }
     }
 }

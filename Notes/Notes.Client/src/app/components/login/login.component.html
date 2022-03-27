@@ -1,0 +1,36 @@
+<div class="center">
+    <mat-card class="form-card">
+        <mat-card-title>
+            <mat-toolbar color="primary">
+                <mat-icon>auto_stories</mat-icon>
+                <span>Notes</span>
+            </mat-toolbar>
+        </mat-card-title>
+        <mat-card-subtitle>Вход</mat-card-subtitle>
+        <mat-card-content>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="form-controls">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Введите Email</mat-label>
+                        <input matInput placeholder="pat@example.com" formControlName="email" type="email">
+                        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Это поле не может быть пустым</mat-error>
+                        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Адрес электронной почты указан неверно</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>Введите пароль</mat-label>
+                        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Показать пароль'" [attr.aria-pressed]="hide" type="button">
+                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Это поле не может быть пустым</mat-error>
+                    </mat-form-field>
+                    <button mat-raised-button type="submit" color="primary" [disabled]="isInLoadingState">Войти</button>
+                    <button mat-raised-button color="accent" type="button" (click)="onRegister()">Зарегистрироваться</button>
+                </div>
+            </form>
+        </mat-card-content>
+        <mat-card-footer *ngIf="isInLoadingState">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-card-footer>
+    </mat-card>
+</div>

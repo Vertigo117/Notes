@@ -12,7 +12,8 @@ namespace Notes.Core.Interfaces
         /// адрес электронной почты
         /// </summary>
         /// <param name="email">Адрес электронной почты пользователя</param>
+        /// <param name="name">Имя пользователя</param>
         /// <returns>Строка с токеном</returns>
-        string Generate(string email);
+        string Generate(string email, string name);
     }
 }

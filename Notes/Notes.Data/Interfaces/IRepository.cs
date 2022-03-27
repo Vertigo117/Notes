@@ -46,5 +46,11 @@ namespace Notes.Data.Interfaces
         /// </summary>
         /// <param name="entity">Экземпляр сущности</param>
         void Remove(TEntity entity);
+
+        /// <summary>
+        /// Получить все экземпляры сущности
+        /// </summary>
+        /// <returns>Коллекция экземпляров сущности</returns>
+        Task<IEnumerable<TEntity>> GetAsync();
     }
 }

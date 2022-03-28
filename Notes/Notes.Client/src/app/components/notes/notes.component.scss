@@ -2,17 +2,38 @@
     display: grid;
     grid-template-columns: 30% 70%;
     grid-template-rows: 40px auto;
+    height: 91%;
+
+    button {
+        mat-icon {
+            margin-right: 5px;
+        }
+    }
+
+    .progress-bar {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+    }
 
     .note-list-controls {
         grid-row: 1;
         grid-column: 1;
         display: flex;
         justify-content: right;
+        align-items: center;
     }
 
-    .note-list {
+    .notes-list {
         grid-row: 2;
         grid-column: 1;
+        overflow-y: auto;
+        border-right: 0.01px solid;
+        border-color: rgba(255,255,255,.12);
+
+        .empty-list {
+            text-align: center;
+            padding: 5px;
+        }
 
         .note {
             display: flex;
@@ -28,11 +49,37 @@
     .note-edit {
         grid-row: 2;
         grid-column: 2;
+        padding: 1%;
 
         .editor-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .editor ::ng-deep {
+            .NgxEditor__MenuBar {
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+                border-top: 1px solid rgba(0, 0, 0, 0.2);
+                background: inherit;
+            }
+            
+            .NgxEditor {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                border: none;
+                background: inherit;
+                color: inherit;
+            }
+
+            .NgxEditor__MenuItem.NgxEditor__MenuItem--Active {
+                background-color: rgba(255,255,255,.12);
+                color: #1a73e8;
+            }
+            
         }
     }
 }

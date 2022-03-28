@@ -1,31 +1,36 @@
 <div class="container">
+    <div class="progress-bar" *ngIf="isInLoadingState">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
     <div class="note-list-controls mat-elevation-z2">
         <button mat-raised-button (click)="onAddClick()">
             <mat-icon>add</mat-icon>
             <span>Новая заметка</span>
         </button>
     </div>
-    <div class="note-edit-controls mat-elevation-z2"></div>
-    <div class="note-list" *ngFor="let note of notes">
-        <mat-selection-list *ngIf="notes.length > 0" [multiple]="false">
-            <mat-list-option *ngFor="let note of notes" [value]="note" (click)="onNoteClick(note)">
-                <div class="note">
-                    <div>
-                        <div matLine>{{note.name}}</div>
-                        <div matLine style="font-size: small;">{{note.creationDate | date}}</div>
+    <div class="notes-list">
+        <div class="notes">
+            <mat-selection-list *ngIf="notes.length > 0" [multiple]="false">
+                <mat-list-option *ngFor="let note of notes" [value]="note" (click)="onNoteClick(note)">
+                    <div class="note">
+                        <div>
+                            <div matLine>{{note.name}}</div>
+                            <div matLine style="font-size: small;">{{note.creationDate | date}}</div>
+                        </div>
+                        <div>
+                            <button mat-icon-button (click)="onDeleteClick(note.id)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                        <mat-divider></mat-divider>
                     </div>
-                    <div>
-                        <button mat-icon-button (click)="onDeleteClick(note.id)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
-                    <mat-divider></mat-divider>
-                </div>
-            </mat-list-option>
-        </mat-selection-list>
-        <p *ngIf="notes.length == 0">Заметок нет</p>
+                </mat-list-option>
+            </mat-selection-list>
+        </div>
+        <p class="empty-list" *ngIf="notes.length == 0">Заметок нет, нажмите "Новая заметка", чтобы создать заметку.</p>
     </div>
-    <div class="note-edit">
+    <div class="note-edit-controls mat-elevation-z2"></div>
+    <div class="note-edit" *ngIf="selectedNote && notes.length > 0">
         <form [formGroup]="editorForm">
             <div class="editor-controls">
                 <mat-form-field>
@@ -36,9 +41,9 @@
                       </button>
                     <mat-error *ngIf="editorForm.get('name')?.hasError('required')">Заполните заголовок</mat-error>
                 </mat-form-field>
-                <button type="button" class="save" mat-flat-button (click)="onSaveClick()">
-                    <span>Сохранить</span>
+                <button type="submit" color="primary" class="save" mat-flat-button (click)="onSaveClick()">
                     <mat-icon>save</mat-icon>
+                    <span>Сохранить</span>
                 </button>
             </div>
             <div class="editor">

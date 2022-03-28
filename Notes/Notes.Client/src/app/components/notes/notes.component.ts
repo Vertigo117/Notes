@@ -13,9 +13,10 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 })
 export class NotesComponent implements OnInit, OnDestroy {
 
-  public notes!: NoteDto[];
+  public notes: NoteDto[] = [];
   public selectedNote?: NoteDto;
   public editor: Editor = new Editor;
+  public isInLoadingState = false;
 
   public editorForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -33,7 +34,14 @@ export class NotesComponent implements OnInit, OnDestroy {
   }
 
   private getNotes(): void {
-    this.notesService.getAll().subscribe((response) => this.notes = response);
+    this.isInLoadingState = true;
+    this.notesService.getAll().subscribe({
+      next: response => {
+        this.notes = response;
+        this.isInLoadingState = false;
+      },
+      error: () => this.isInLoadingState = false
+    });
   }
 
   public onNoteClick(note: NoteDto): void {
@@ -46,13 +54,25 @@ export class NotesComponent implements OnInit, OnDestroy {
   }
 
   public onSaveClick(): void {
+    if (!this.editorForm.valid) {
+      return;
+    }
+
     if (this.selectedNote) {
+      let noteUpsertDto = this.editorForm.value as NoteUpsertDto;
       this.notesService
-        .update(this.selectedNote.id, this.editorForm.value as NoteUpsertDto)
-        .subscribe(() => {
-          this.getNotes();
+        .update(this.selectedNote.id, noteUpsertDto).subscribe(() => {
+          this.updateNotes(noteUpsertDto);
           this.openSnackBar('Изменения сохранены.');
         });
+    }
+  }
+
+  private updateNotes(noteUpsertDto: NoteUpsertDto): void {
+    let note = this.notes.find(note => note.id == this.selectedNote?.id);
+    if (note) {
+      note.name = noteUpsertDto.name;
+      note.text = noteUpsertDto.text;
     }
   }
 
@@ -68,13 +88,13 @@ export class NotesComponent implements OnInit, OnDestroy {
       name: 'Новая заметка',
       text: ''
     }
-    this.notesService.create(note).subscribe(() => this.getNotes());
+    this.notesService.create(note).subscribe((response) => this.notes.push(response));
   }
 
   public onDeleteClick(id: number): void {
     this.notesService.delete(id).subscribe(() => {
       this.getNotes();
-      this.editorForm.reset();
+      this.selectedNote = undefined;
       this.openSnackBar('Заметка удалена.')
     });
   }

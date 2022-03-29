@@ -21,7 +21,7 @@ export class JwtInterceptorService implements HttpInterceptor {
   }
 
   private isValidRequest(request: HttpRequest<any>): boolean {
-    return this.accountService.isAuthenticated && this.isApiUrl(request.url);
+    return this.accountService.isAuthenticated;
   }
 
   private isApiUrl(url: string): boolean {

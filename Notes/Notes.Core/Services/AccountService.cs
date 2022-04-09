@@ -41,7 +41,7 @@ namespace Notes.Core.Services
                 return new Result<TokenDto>("Пользователя с таким адресом электронной почты не существует");
             }
 
-            if (!encryptionService.ValidatePassword(userLoginDto.Password, user.PasswordHash))
+            if (!ValidatePassword(userLoginDto.Password, user.PasswordHash))
             {
                 return new Result<TokenDto>("Пароль введён неверно");
             }
@@ -49,6 +49,11 @@ namespace Notes.Core.Services
             var jwt = jwtService.Generate(userLoginDto.Email, user.Name);
             var data = new TokenDto { Token = jwt };
             return new Result<TokenDto>(data);
+        }
+
+        private bool ValidatePassword(string password, string passwordHash)
+        {
+            return encryptionService.ValidatePassword(password, passwordHash);
         }
 
         public async Task<Result<UserDto>> RegisterAsync(UserUpsertDto userUpsertDto)

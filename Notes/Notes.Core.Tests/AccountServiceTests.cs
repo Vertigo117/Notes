@@ -21,7 +21,7 @@ namespace Notes.Core.Tests
     {
         [Theory]
         [AutoMoqData]
-        public async Task LoginAsync_ProperCredentialsPassed_RepositoryGetAsyncMethodCalled(
+        public async Task LoginAsync_RepositoryGetAsyncMethodCalled(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             AccountService accountService,
             UserLoginDto credentialsDto,
@@ -53,6 +53,7 @@ namespace Notes.Core.Tests
 
             //Assert
             Assert.False(actual.IsSuccess);
+            Assert.Equal("Пользователя с таким адресом электронной почты не существует", actual.Message);
         }
 
         [Theory]
@@ -97,6 +98,7 @@ namespace Notes.Core.Tests
 
             //Assert
             Assert.False(actual.IsSuccess);
+            Assert.Equal("Пароль введён неверно", actual.Message);
         }
 
         [Theory]
@@ -150,7 +152,7 @@ namespace Notes.Core.Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task RegisterAsync_UserPassed_RepositoryGetAsyncMethodCalled(
+        public async Task RegisterAsync_RepositoryGetAsyncMethodCalled(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             AccountService accountService,
             UserUpsertDto userDto,
@@ -188,7 +190,7 @@ namespace Notes.Core.Tests
             //Assert
             Assert.NotNull(actual);
             Assert.False(actual.IsSuccess);
-            Assert.False(string.IsNullOrEmpty(actual.Message));
+            Assert.Equal("Пользователь с таким адресом электронной почты уже существует", actual.Message);
         }
 
         [Theory]
@@ -208,7 +210,7 @@ namespace Notes.Core.Tests
             //Assert
             Assert.NotNull(actual);
             Assert.False(actual.IsSuccess);
-            Assert.False(string.IsNullOrEmpty(actual.Message));
+            Assert.Equal("Пароль и его подтверждение должны совпадать", actual.Message);
         }
 
         [Theory]
@@ -351,7 +353,7 @@ namespace Notes.Core.Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task DeleteAsync_EmailPassed_RepositoryUsersGetAsyncMethodCalled(
+        public async Task DeleteAsync_RepositoryUsersGetAsyncMethodCalled(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             AccountService accountService,
             User user)

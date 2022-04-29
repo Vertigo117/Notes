@@ -36,7 +36,7 @@ namespace Notes.Core.Services
         {
             User user = await repository.Users.GetAsync(userLoginDto.Email);
 
-            if (user == null)
+            if (user is null)
             {
                 return new Result<TokenDto>("Пользователя с таким адресом электронной почты не существует");
             }
@@ -87,7 +87,7 @@ namespace Notes.Core.Services
         {
             User userEntity = await repository.Users.GetAsync(email);
 
-            if (userEntity == null)
+            if (userEntity is null)
             {
                 return;
             }

@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
       next: response => {
         let credentials: UserLoginDto = {
           password: this.registerForm.controls['password'].value,
-          email: response.email
+          email: response.data.email
         }
         this.accountService.login(credentials).subscribe({
           next: () => {

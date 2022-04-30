@@ -4,7 +4,6 @@ using Notes.Api.Models;
 using Notes.Core.Contracts;
 using Notes.Core.Interfaces;
 using Notes.Core.Models;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -34,14 +33,14 @@ namespace Notes.Api.Controllers
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Login([FromBody] UserLoginDto request)
         {
-            Result<TokenDto> result = await accountService.LoginAsync(request);
+            Result result = await accountService.LoginAsync(request);
 
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result.ErrorMessage);
             }
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         /// <summary>
@@ -56,14 +55,14 @@ namespace Notes.Api.Controllers
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Register([FromBody] UserUpsertDto request)
         {
-            Result<UserDto> result = await accountService.RegisterAsync(request);
+            Result result = await accountService.RegisterAsync(request);
 
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result.ErrorMessage);
             }
 
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         /// <summary>

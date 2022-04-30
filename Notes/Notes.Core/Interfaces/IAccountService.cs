@@ -15,14 +15,14 @@ namespace Notes.Core.Interfaces
         /// </summary>
         /// <param name="userLoginDto">Данные для авторизации</param>
         /// <returns>Результат авторизации</returns>
-        Task<Result<TokenDto>> LoginAsync(UserLoginDto userLoginDto);
+        Task<Result> LoginAsync(UserLoginDto userLoginDto);
 
         /// <summary>
         /// Зарегистрировать нового пользователя в системе
         /// </summary>
         /// <param name="userUpsertDto">Данные для регистрации</param>
         /// <returns>Результат регистрации</returns>
-        Task<Result<UserDto>> RegisterAsync(UserUpsertDto userUpsertDto);
+        Task<Result> RegisterAsync(UserUpsertDto userUpsertDto);
 
         /// <summary>
         /// Удалить пользователя с указанным адресом электронной почты

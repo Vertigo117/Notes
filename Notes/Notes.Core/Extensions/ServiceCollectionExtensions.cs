@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
 using Notes.Core.Interfaces;
 using Notes.Core.Services;
 using System.Reflection;
@@ -22,6 +23,9 @@ namespace Notes.Core.Extensions
             services.AddScoped<IEncryptionService, EncryptionService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<INotesService, NotesService>();
+
+            services.AddFluentValidation(configuration => 
+                configuration.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
         }
     }
 }

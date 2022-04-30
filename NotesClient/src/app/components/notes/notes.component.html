@@ -26,6 +26,10 @@
                     </div>
                 </mat-list-option>
             </mat-selection-list>
+            <div class="more" *ngIf="notes.length < total">
+                <mat-divider></mat-divider>
+                <button mat-button color="primary" (click)="onShowMoreClick()">Показать больше</button>
+            </div>
         </div>
         <p class="empty-list" *ngIf="notes.length == 0">Заметок нет, нажмите "Новая заметка", чтобы создать заметку.</p>
     </div>

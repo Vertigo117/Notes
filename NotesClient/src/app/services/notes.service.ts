@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { API_URL } from '../app.injection-tokens';
 import { NoteDto } from '../models/note-dto.model';
 import { NoteUpsertDto } from '../models/note-upsert-dto.model';
+import { PagedNotesDto } from '../models/paged-notes-dto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,10 @@ export class NotesService {
 
   constructor(@Inject(API_URL) private apiUrl: string, private httpClient: HttpClient) { }
 
-  public getAll(): Observable<NoteDto[]> {
-    return this.httpClient.get<NoteDto[]>(`${this.apiUrl}/Notes/Get`);
+  public getPaged(skip: number, take: number): Observable<PagedNotesDto> {
+    return this.httpClient.get<PagedNotesDto>(`${this.apiUrl}/Notes/Get`, {
+      params: {skip, take}
+    });
   }
 
   public getById(id: number): Observable<NoteDto> {

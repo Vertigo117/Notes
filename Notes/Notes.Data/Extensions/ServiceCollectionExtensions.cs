@@ -25,7 +25,7 @@ namespace Notes.Data.Extensions
             services.AddDbContext<NotesContext>(options => options.UseNpgsql(connectionString));
             services.AddScoped<IUnitOfWork, RepositoryWrapper>();
             services.AddScoped<IRepository<User>, Repository<User>>();
-            services.AddScoped<IRepository<Note>, Repository<Note>>();
+            services.AddScoped<INotesRepository, NotesRepository>();
         }
     }
 }

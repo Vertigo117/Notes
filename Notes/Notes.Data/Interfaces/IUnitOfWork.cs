@@ -16,7 +16,7 @@ namespace Notes.Data.Interfaces
         /// <summary>
         /// Репозиторий заметок
         /// </summary>
-        public IRepository<Note> Notes { get; }
+        public INotesRepository Notes { get; }
 
         /// <summary>
         /// Сохранить изменения

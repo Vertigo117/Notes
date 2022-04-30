@@ -17,6 +17,9 @@ export class NotesComponent implements OnInit, OnDestroy {
   public selectedNote?: NoteDto;
   public editor: Editor = new Editor;
   public isInLoadingState = false;
+  public total: number = 0;
+  public skip: number = 0;
+  public take: number = 10;
 
   public editorForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -30,18 +33,24 @@ export class NotesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getNotes();
+    this.getNotes(this.skip, this.take);
   }
 
-  private getNotes(): void {
+  private getNotes(skip: number, take: number): void {
     this.isInLoadingState = true;
-    this.notesService.getAll().subscribe({
+    this.notesService.getPaged(skip, take).subscribe({
       next: response => {
-        this.notes = response;
+        this.notes = this.notes.concat(response.notes);
+        this.total = response.total;
+        this.skip += response.notes.length;
         this.isInLoadingState = false;
       },
       error: () => this.isInLoadingState = false
     });
+  }
+
+  public onShowMoreClick(): void {
+    this.getNotes(this.skip, this.take);
   }
 
   public onNoteClick(note: NoteDto): void {
@@ -93,7 +102,7 @@ export class NotesComponent implements OnInit, OnDestroy {
 
   public onDeleteClick(id: number): void {
     this.notesService.delete(id).subscribe(() => {
-      this.getNotes();
+      this.notes.splice(this.notes.findIndex(note => note.id == id));
       this.selectedNote = undefined;
       this.openSnackBar('Заметка удалена.')
     });

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { API_URL } from '../app.injection-tokens';
+import { Result } from '../models/result.model';
 import { TokenDto } from '../models/token-dto.model';
 import { UserDto } from '../models/user-dto.model';
 import { UserLoginDto } from '../models/user-login-dto.model';
@@ -17,9 +18,9 @@ export class AccountService {
   constructor(
     @Inject(API_URL) private apiUrl: string, private httpClient: HttpClient) { }
 
-  public login(userLoginDto: UserLoginDto): Observable<TokenDto> {
-    return this.httpClient.post<TokenDto>(`${this.apiUrl}/Account/Login`, userLoginDto).pipe(tap({
-      next: response => localStorage.setItem(ACCESS_TOKEN_KEY, response.token)
+  public login(userLoginDto: UserLoginDto): Observable<Result<TokenDto>> {
+    return this.httpClient.post<Result<TokenDto>>(`${this.apiUrl}/Account/Login`, userLoginDto).pipe(tap({
+      next: response => localStorage.setItem(ACCESS_TOKEN_KEY, response.data.token)
     }))
   }
 
@@ -29,8 +30,8 @@ export class AccountService {
     }
   }
 
-  public register(userUpsertDto: UserUpsertDto): Observable<UserDto> {
-    return this.httpClient.post<UserDto>(`${this.apiUrl}/Account/Register`, userUpsertDto);
+  public register(userUpsertDto: UserUpsertDto): Observable<Result<UserDto>> {
+    return this.httpClient.post<Result<UserDto>>(`${this.apiUrl}/Account/Register`, userUpsertDto);
   }
 
   public get isAuthenticated(): boolean {

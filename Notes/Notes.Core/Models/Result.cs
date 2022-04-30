@@ -1,33 +1,14 @@
 ﻿namespace Notes.Core.Models
 {
     /// <summary>
-    /// Результат работы сервиса
+    /// Результат с данными
     /// </summary>
-    public class Result<TData>
+    public class Result<TData> : Result
     {
-        /// <summary>
-        /// Маркер успешного выполнения
-        /// </summary>
-        public bool IsSuccess { get; }
-
-        /// <summary>
-        /// Сообщение
-        /// </summary>
-        public string Message { get; }
-
         /// <summary>
         /// Данные
         /// </summary>
-        public TData Data { get; }
-
-        /// <summary>
-        /// Создаёт новый экземпляр класса <see cref="Result{TData}"/> с сообщением об ошибке
-        /// </summary>
-        /// <param name="message">Сообщение об ошибке</param>
-        public Result(string message)
-        {
-            Message = message;
-        }
+        public TData Data { get; set; }
 
         /// <summary>
         /// Создаёт новый экзмепляр класса <see cref="Result{TData}"/> с данными
@@ -36,7 +17,28 @@
         public Result(TData data)
         {
             Data = data;
-            IsSuccess = true;
         }
+    }
+
+    /// <summary>
+    /// Результат
+    /// </summary>
+    public class Result
+    {
+        /// <summary>
+        /// Маркер успешного выполнения
+        /// </summary>
+        public bool IsSuccess => string.IsNullOrEmpty(ErrorMessage);
+
+        /// <summary>
+        /// Сообщение об ошибке
+        /// </summary>
+        public string ErrorMessage { get; set; }
+
+        /// <summary>
+        /// Создаёт новый экземпляр класса <see cref="Result{TData}"/>
+        /// </summary>
+        public Result()
+        { }
     }
 }

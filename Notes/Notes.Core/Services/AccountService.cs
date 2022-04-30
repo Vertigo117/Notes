@@ -32,18 +32,18 @@ namespace Notes.Core.Services
             this.mapper = mapper;
         }
 
-        public async Task<Result<TokenDto>> LoginAsync(UserLoginDto userLoginDto)
+        public async Task<Result> LoginAsync(UserLoginDto userLoginDto)
         {
             User user = await repository.Users.GetAsync(userLoginDto.Email);
 
             if (user is null)
             {
-                return new Result<TokenDto>("Пользователя с таким адресом электронной почты не существует");
+                return new Result { ErrorMessage = "Пользователя с таким адресом электронной почты не существует" };
             }
 
             if (!ValidatePassword(userLoginDto.Password, user.PasswordHash))
             {
-                return new Result<TokenDto>("Пароль введён неверно");
+                return new Result { ErrorMessage = "Пароль введён неверно" };
             }
 
             var jwt = jwtService.Generate(userLoginDto.Email, user.Name);
@@ -56,16 +56,16 @@ namespace Notes.Core.Services
             return encryptionService.ValidatePassword(password, passwordHash);
         }
 
-        public async Task<Result<UserDto>> RegisterAsync(UserUpsertDto userUpsertDto)
+        public async Task<Result> RegisterAsync(UserUpsertDto userUpsertDto)
         {
             if (await IsExistingUser(userUpsertDto))
             {
-                return new Result<UserDto>("Пользователь с таким адресом электронной почты уже существует");
+                return new Result { ErrorMessage = "Пользователь с таким адресом электронной почты уже существует" };
             }
 
             if (IsPasswordConfirmed(userUpsertDto))
             {
-                return new Result<UserDto>("Пароль и его подтверждение должны совпадать");
+                return new Result { ErrorMessage = "Пароль и его подтверждение должны совпадать" };
             }
 
             var user = mapper.Map<User>(userUpsertDto);

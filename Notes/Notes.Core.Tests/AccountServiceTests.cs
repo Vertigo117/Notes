@@ -49,11 +49,11 @@ namespace Notes.Core.Tests
             unitOfWorkMock.Setup(unitOfWork => unitOfWork.Users.GetAsync(It.IsAny<object>())).ReturnsAsync(user);
 
             //Act
-            Result<TokenDto> actual = await accountService.LoginAsync(credentialsDto);
+            Result actual = await accountService.LoginAsync(credentialsDto);
 
             //Assert
             Assert.False(actual.IsSuccess);
-            Assert.Equal("Пользователя с таким адресом электронной почты не существует", actual.Message);
+            Assert.Equal("Пользователя с таким адресом электронной почты не существует", actual.ErrorMessage);
         }
 
         [Theory]
@@ -94,11 +94,11 @@ namespace Notes.Core.Tests
                 .Returns(false);
 
             //Act
-            Result<TokenDto> actual = await accountService.LoginAsync(credentialsDto);
+            Result actual = await accountService.LoginAsync(credentialsDto);
 
             //Assert
             Assert.False(actual.IsSuccess);
-            Assert.Equal("Пароль введён неверно", actual.Message);
+            Assert.Equal("Пароль введён неверно", actual.ErrorMessage);
         }
 
         [Theory]
@@ -143,11 +143,11 @@ namespace Notes.Core.Tests
                 .Returns(true);
 
             //Act
-            Result<TokenDto> actual = await accountService.LoginAsync(credentialsDto);
+            Result actual = await accountService.LoginAsync(credentialsDto);
 
             //Assert
             Assert.True(actual.IsSuccess);
-            Assert.NotNull(actual.Data);
+            Assert.IsType<Result<TokenDto>>(actual);
         }
 
         [Theory]
@@ -185,12 +185,12 @@ namespace Notes.Core.Tests
                 .ReturnsAsync(users);
 
             //Act
-            Result<UserDto> actual = await accountService.RegisterAsync(userDto);
+            Result actual = await accountService.RegisterAsync(userDto);
 
             //Assert
             Assert.NotNull(actual);
             Assert.False(actual.IsSuccess);
-            Assert.Equal("Пользователь с таким адресом электронной почты уже существует", actual.Message);
+            Assert.Equal("Пользователь с таким адресом электронной почты уже существует", actual.ErrorMessage);
         }
 
         [Theory]
@@ -205,12 +205,12 @@ namespace Notes.Core.Tests
             unitOfWorkMock.Setup(mock => mock.Users.GetAsync(It.IsAny<string>())).ReturnsAsync(user);
 
             //Act
-            Result<UserDto> actual = await accountService.RegisterAsync(userDto);
+            Result actual = await accountService.RegisterAsync(userDto);
 
             //Assert
             Assert.NotNull(actual);
             Assert.False(actual.IsSuccess);
-            Assert.Equal("Пароль и его подтверждение должны совпадать", actual.Message);
+            Assert.Equal("Пароль и его подтверждение должны совпадать", actual.ErrorMessage);
         }
 
         [Theory]

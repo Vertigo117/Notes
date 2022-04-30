@@ -5,6 +5,7 @@ using Notes.Data.Entities;
 using Notes.Data.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Notes.Core.Services
@@ -35,10 +36,16 @@ namespace Notes.Core.Services
             return mapper.Map<NoteDto>(note);
         }
 
-        public async Task<IEnumerable<NoteDto>> GetAllNotesAsync(string email)
+        public async Task<PagedNotesDto> GetPagedNotesAsync(string email, int skip, int take)
         {
-            IEnumerable<Note> userNotes = await repository.Notes.GetAsync(note => note.User.Email == email);
-            return mapper.Map<IEnumerable<NoteDto>>(userNotes);
+            Expression<Func<Note, bool>> predicate = note => note.User.Email == email;
+            
+            int total = await repository.Notes.GetTotalAsync(predicate);
+            IEnumerable<Note> entities = await repository.Notes.GetPagedAsync(predicate, skip, take);
+
+            IEnumerable<NoteDto> notes = mapper.Map<IEnumerable<NoteDto>>(entities);
+            
+            return new PagedNotesDto { Total = total, Notes = notes };
         }
 
         public async Task<NoteDto> GetNoteAsync(int id)

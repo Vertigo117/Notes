@@ -25,11 +25,13 @@ namespace Notes.Core.Interfaces
         Task<NoteDto> CreateNoteAsync(NoteUpsertDto noteUpsertDto, string email);
 
         /// <summary>
-        /// Обработать запрос на получение заметок пользователя
+        /// Постраничный запрос на получение заметок
         /// </summary>
-        /// <param name="email">Адрес электронной почты пользователя</param>
-        /// <returns>Результат выполнения запроса, который содержит коллекцию заметок пользователя</returns>
-        Task<IEnumerable<NoteDto>> GetAllNotesAsync(string email);
+        /// <param name="skip">Сколько пропустить</param>
+        /// <param name="take">Сколько взять</param>
+        /// <returns>Задача, которая содержит результат выполнения асинхронного постраничного 
+        /// запроса на получение заметок</returns>
+        Task<PagedNotesDto> GetPagedNotesAsync(string email, int skip, int take);
 
         /// <summary>
         /// Удалить заметку с указанным уникальным идентификатором

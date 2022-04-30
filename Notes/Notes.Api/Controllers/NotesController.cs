@@ -21,17 +21,19 @@ namespace Notes.Api.Controllers
         }
 
         /// <summary>
-        /// Получить список всех заметок пользователя
+        /// Получить постраничный список заметок
         /// </summary>
-        /// <returns>Результат операции</returns>
+        /// <param name="skip">Сколько пропустить</param>
+        /// <param name="take">Сколько вывести</param>
+        /// <returns>Постраничный список заметок</returns>
         [HttpGet]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType((typeof(IEnumerable<NoteDto>)), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get([FromQuery] int skip, [FromQuery] int take)
         {
             string email = GetUserMail();
-            IEnumerable<NoteDto> response = await notesService.GetAllNotesAsync(email);
+            PagedNotesDto response = await notesService.GetPagedNotesAsync(email, skip, take);
             return Ok(response);
         }
 

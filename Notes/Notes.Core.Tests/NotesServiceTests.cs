@@ -149,49 +149,6 @@ namespace Notes.Core.Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task GetAllNotesAsync_RepositoryNotesGetAsyncMethodCalled(
-            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
-            IEnumerable<Note> notes,
-            NotesService notesService,
-            string email)
-        {
-            //Arrange
-            unitOfWorkMock
-                .Setup(mock => mock.Notes.GetAsync(It.IsAny<Expression<Func<Note, bool>>>()))
-                .ReturnsAsync(notes);
-
-            //Act
-            await notesService.GetAllNotesAsync(email);
-
-            //Assert
-            unitOfWorkMock.Verify(mock => mock.Notes.GetAsync(It.IsAny<Expression<Func<Note, bool>>>()), Times.Once);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task GetAllNotesAsync_MapperMapNoteDtoCollectionMethodCalled(
-            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
-            [Frozen] Mock<IMapper> mapperMock,
-            IEnumerable<Note> notes,
-            NotesService notesService,
-            string email,
-            IEnumerable<NoteDto> notesDto)
-        {
-            //Arrange
-            unitOfWorkMock
-                .Setup(mock => mock.Notes.GetAsync(It.IsAny<Expression<Func<Note, bool>>>()))
-                .ReturnsAsync(notes);
-            mapperMock.Setup(mock => mock.Map<IEnumerable<NoteDto>>(It.IsAny<IEnumerable<Note>>())).Returns(notesDto);
-
-            //Act
-            await notesService.GetAllNotesAsync(email);
-
-            //Assert
-            mapperMock.Verify(mock => mock.Map<IEnumerable<NoteDto>>(It.IsAny<IEnumerable<Note>>()), Times.Once);
-        }
-
-        [Theory]
-        [AutoMoqData]
         public async Task GetNoteAsync_RepositoryNotesGetAsyncMethodCalled(
             [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
             Note note,
@@ -225,6 +182,118 @@ namespace Notes.Core.Tests
 
             //Assert
             mapperMock.Verify(mock => mock.Map<NoteDto>(It.IsAny<Note>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPagedNotesAsync_GetTotalAsyncMethodCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            int total,
+            int take,
+            int skip,
+            string email,
+            NotesService notesService)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Notes.GetTotalAsync(It.IsAny<Expression<Func<Note, bool>>>()))
+                .ReturnsAsync(total);
+
+            //Act
+            await notesService.GetPagedNotesAsync(email, skip, take);
+
+            //Assert
+            unitOfWorkMock.Verify(mock => 
+                mock.Notes.GetTotalAsync(It.IsAny<Expression<Func<Note, bool>>>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPagedNotesAsync_GetPagedAsyncMethodCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            int total,
+            int take,
+            int skip,
+            string email,
+            IEnumerable<Note> notes,
+            NotesService notesService)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Notes.GetTotalAsync(It.IsAny<Expression<Func<Note, bool>>>()))
+                .ReturnsAsync(total);
+            unitOfWorkMock.Setup(mock => mock.Notes.GetPagedAsync(
+                It.IsAny<Expression<Func<Note, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<int>())).ReturnsAsync(notes);
+
+            //Act
+            await notesService.GetPagedNotesAsync(email, skip, take);
+
+            //Assert
+            unitOfWorkMock.Verify(mock => mock.Notes.GetPagedAsync(
+                    It.IsAny<Expression<Func<Note, bool>>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPagedNotesAsync_MapperMapMethodCalled(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            [Frozen] Mock<IMapper> mapperMock,
+            int total,
+            int take,
+            int skip,
+            string email,
+            IEnumerable<Note> notes,
+            IEnumerable<NoteDto> notesDto,
+            NotesService notesService)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Notes.GetTotalAsync(It.IsAny<Expression<Func<Note, bool>>>()))
+                .ReturnsAsync(total);
+            unitOfWorkMock.Setup(mock => mock.Notes.GetPagedAsync(
+                It.IsAny<Expression<Func<Note, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<int>())).ReturnsAsync(notes);
+            mapperMock.Setup(mock => mock.Map<IEnumerable<NoteDto>>(It.IsAny<IEnumerable<Note>>())).Returns(notesDto);
+
+            //Act
+            await notesService.GetPagedNotesAsync(email, skip, take);
+
+            //Assert
+            mapperMock.Verify(mock => mock.Map<IEnumerable<NoteDto>>(It.IsAny<IEnumerable<Note>>()), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task GetPagedNotesAsync_ReturnsPagedNotesDto(
+            [Frozen] Mock<IUnitOfWork> unitOfWorkMock,
+            [Frozen] Mock<IMapper> mapperMock,
+            int total,
+            int take,
+            int skip,
+            string email,
+            IEnumerable<Note> notes,
+            IEnumerable<NoteDto> notesDto,
+            NotesService notesService)
+        {
+            //Arrange
+            unitOfWorkMock.Setup(mock => mock.Notes.GetTotalAsync(It.IsAny<Expression<Func<Note, bool>>>()))
+                .ReturnsAsync(total);
+            unitOfWorkMock.Setup(mock => mock.Notes.GetPagedAsync(
+                It.IsAny<Expression<Func<Note, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<int>())).ReturnsAsync(notes);
+            mapperMock.Setup(mock => mock.Map<IEnumerable<NoteDto>>(It.IsAny<IEnumerable<Note>>())).Returns(notesDto);
+
+            //Act
+            PagedNotesDto actual = await notesService.GetPagedNotesAsync(email, skip, take);
+
+            //Assert
+            Assert.NotNull(actual);
+            Assert.IsType<PagedNotesDto>(actual);
+            Assert.Equal(total, actual.Total);
+            Assert.NotEmpty(actual.Notes);
         }
 
         [Theory]

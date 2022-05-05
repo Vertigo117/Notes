@@ -63,7 +63,7 @@ namespace Notes.Core.Services
                 return new Result { ErrorMessage = "Пользователь с таким адресом электронной почты уже существует" };
             }
 
-            if (IsPasswordConfirmed(userUpsertDto))
+            if (!IsPasswordConfirmed(userUpsertDto))
             {
                 return new Result { ErrorMessage = "Пароль и его подтверждение должны совпадать" };
             }
@@ -80,7 +80,7 @@ namespace Notes.Core.Services
 
         private static bool IsPasswordConfirmed(UserUpsertDto user)
         {
-            return user.Password != user.ConfirmPassword;
+            return user.Password == user.ConfirmPassword;
         }
 
         public async Task DeleteAsync(string email)
